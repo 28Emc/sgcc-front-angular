@@ -1,0 +1,142 @@
+<form (ngSubmit)="save()" [formGroup]="form" autocomplete="off">
+  <div class="flex-row justify-start items-center" mat-dialog-title>
+    <h2 class="headline m-0 flex-1">{{ tituloForm }}</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+
+  <mat-dialog-content fxLayout="column">
+    <div class="flex-col sm:flex-row pt-6">
+      <h3 class="text-secondary">Datos personales</h3>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Nombres</mat-label>
+        <input cdkFocusInitial formControlName="nombres" matInput placeholder="Ejm: Pepito" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:person"></mat-icon>
+        <mat-error *ngIf="form.get('nombres').hasError('required')">Nombre/s requerido/s</mat-error>
+      </mat-form-field>
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-1">
+        <mat-label>Apellido Paterno</mat-label>
+        <input formControlName="apellidoPaterno" matInput placeholder="Ejm: Paredes" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:person"></mat-icon>
+        <mat-error *ngIf="form.get('apellidoPaterno').hasError('required')">El apellido paterno es requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-1">
+        <mat-label>Apellido Materno</mat-label>
+        <input formControlName="apellidoMaterno" matInput placeholder="Ejm: Rojas" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:person"></mat-icon>
+        <mat-error *ngIf="form.get('apellidoMaterno').hasError('required')">El apellido materno es requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Tipo Documento</mat-label>
+        <mat-select formControlName="tipoDocumento" required>
+          <mat-option *ngFor="let td of arrTiposDocumento" [value]="td.valor">
+            {{ td.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:badge"></mat-icon>
+        <mat-error *ngIf="form.get('tipoDocumento').hasError('required')">El tipo de documento es requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-1">
+        <mat-label>Nro. Documento</mat-label>
+        <input formControlName="nroDocumento" matInput placeholder="Ejm: 44883429" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:badge"></mat-icon>
+        <mat-error *ngIf="form.get('nroDocumento').hasError('required')">El nro. de documento es requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Género</mat-label>
+        <mat-select formControlName="genero" required>
+          <mat-option *ngFor="let g of arrGeneros" [value]="g.valor">
+            {{ g.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:male"></mat-icon>
+        <mat-error *ngIf="form.get('genero').hasError('required')">El género es requerido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-1">
+        <mat-label>Teléfono</mat-label>
+        <input formControlName="telefono" matInput placeholder="Ejm: 980111242" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:phone"></mat-icon>
+        <mat-error *ngIf="form.get('telefono').hasError('required')">El teléfono es requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Dirección</mat-label>
+        <input formControlName="direccion" matInput placeholder="Ejm: Av. Lima 123" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:map"></mat-icon>
+        <mat-error *ngIf="form.get('direccion').hasError('required')">La dirección es requerida</mat-error>
+      </mat-form-field>
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-1">
+        <mat-label>E-mail</mat-label>
+        <input formControlName="email" matInput placeholder="Ejm: jcarlos@email.com" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:email"></mat-icon>
+        <mat-error *ngIf="form.get('email').hasError('required')">El email es requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row pt-6">
+      <h3 class="text-secondary">Datos de sesión</h3>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Usuario</mat-label>
+        <input formControlName="usuario" matInput placeholder="Escribe un usuario para el inicio de sesión" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:account_circle"></mat-icon>
+        <mat-error *ngIf="form.get('usuario').hasError('required')">El usuario es requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field class="sm:mt-6 sm:ml-6 flex-1">
+        <mat-label>Contraseña</mat-label>
+        <input type="password" formControlName="password" matInput placeholder="Escribe una contraseña segura" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:lock"></mat-icon>
+        <mat-error *ngIf="form.get('password').hasError('required')">La contraseña es requerida
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="idRol" required>
+          <mat-option *ngFor="let rol of arrRoles" [value]="rol.id_rol">
+            {{ rol.rol }}
+          </mat-option>
+        </mat-select>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:admin_panel_settings"></mat-icon>
+        <mat-error *ngIf="form.get('idRol').hasError('required')">
+          El rol es requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">CANCELAR</button>
+    <button [disabled]="form.invalid" *ngIf="isCreateMode()" mat-button type="submit"
+      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">REGISTRAR</button>
+    <button [disabled]="form.invalid" *ngIf="isUpdateMode()" mat-button type="submit"
+      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">ACTUALIZAR</button>
+  </mat-dialog-actions>
+
+</form>

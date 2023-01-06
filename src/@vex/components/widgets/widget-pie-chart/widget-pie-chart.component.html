@@ -1,0 +1,12 @@
+<div class="card h-full hover:shadow-lg trans-shadow">
+  <div class="border-b py-4 px-6 flex-row justify-start items-center">
+    <h2 class="m-0 title flex-1">{{ title }}</h2>
+  </div>
+
+  <div class="flex-col justify-center items-center">
+    <div @fadeInUp *ngIf="loader === true" class="text-secondary p-custom-pie">Cargando información...</div>
+    <div @fadeInUp *ngIf="loader === false && series.length == 0" class="text-secondary p-custom-pie">No hay información
+      por mostrar</div>
+    <vex-chart [options]="options" [series]="series"></vex-chart>
+  </div>
+</div>

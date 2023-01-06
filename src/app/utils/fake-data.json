@@ -1,0 +1,42 @@
+{
+  "fakeUserPersona": {
+    "usuario": "emedina",
+    "password": "123456",
+    "foto": "https://picsum.photos/200",
+    "persona": {
+      "nombres": "Edinson",
+      "apellido_paterno": "Medina",
+      "apellido_materno": "Chinga",
+      "nro_documento": "47111025",
+      "genero": "M",
+      "direccion": "Jr. Oligistos 2339",
+      "telefono": "954438905",
+      "email": "edi@live.it"
+    }
+  },
+  "fakePermisos": [
+    {
+      "id_componente": 1,
+      "id_componente_padre": 0,
+      "id_permiso": 1,
+      "componente": "",
+      "icono": "mat:home",
+      "ruta": null,
+      "orden": "1",
+      "estado": "A"
+    },
+    {
+      "id_componente": 2,
+      "id_componente_padre": 1,
+      "id_permiso": 2,
+      "componente": "Home",
+      "icono": "mat:home",
+      "ruta": "/home",
+      "orden": "2",
+      "estado": "A"
+    }
+  ],
+  "fakeSesion": {
+    "conectado": "ACT"
+  }
+}

@@ -1,0 +1,71 @@
+<form (ngSubmit)="save()" [formGroup]="form" autocomplete="off">
+
+  <div class="flex-row justify-start items-center" mat-dialog-title>
+    <h2 class="headline m-0 flex-1">{{ tituloForm }}</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="-mx-6 text-border"></mat-divider>
+
+  <mat-dialog-content fxLayout="column">
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Seleccione un recibo</mat-label>
+        <mat-select formControlName="idRecibo" required>
+          <mat-option *ngFor="let r of arrRecibos" [value]="r.idRecibo">
+            {{ r.tipoRecibo | titlecase }} | {{ r.mesReciboDsc | titlecase }} | S/. {{ r.importe | number:
+            '.2-2' }}
+          </mat-option>
+        </mat-select>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:receipt"></mat-icon>
+        <mat-error *ngIf="form.get('idRecibo').hasError('required')">Recibo requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field class="mt-6 flex-1">
+        <mat-label>Seleccione un inquilino</mat-label>
+        <mat-select formControlName="idInquilino" required>
+          <mat-option *ngFor="let i of arrInquilinos" [value]="i.idInquilino">
+            {{ i.nombres | titlecase }}, {{ i.apellidoPaterno | titlecase }} {{ i.apellidoMaterno |
+            titlecase }}
+          </mat-option>
+        </mat-select>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:people"></mat-icon>
+        <mat-error *ngIf="form.get('idInquilino').hasError('required')">Inquilino requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+      <mat-form-field *ngIf="isUpdateMode()" class="mt-6 flex-1">
+        <mat-label>Lectura Anterior</mat-label>
+        <input formControlName="lecturaMedidorAnterior" matInput placeholder="Ejm. 1500" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:pin"></mat-icon>
+        <mat-error *ngIf="form.get('lecturaMedidorAnterior').hasError('required')">
+          La lectura anterior es requerida
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field [ngClass]="isUpdateMode() ? 'sm:mt-6 sm:ml-6 flex-1' : 'mt-6 flex-1'">
+        <mat-label>Lectura Actual</mat-label>
+        <input formControlName="lecturaMedidorActual" matInput placeholder="Ejm. 1530" required>
+        <mat-icon class="mr-3" matPrefix svgIcon="mat:pin"></mat-icon>
+        <mat-error *ngIf="form.get('lecturaMedidorActual').hasError('required')">
+          La lectura actual es requerida
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">CANCELAR</button>
+    <button [disabled]="form.invalid" *ngIf="isCreateMode()" mat-button type="submit"
+      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">REGISTRAR</button>
+    <button [disabled]="form.invalid" *ngIf="isUpdateMode()" mat-button type="submit"
+      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">ACTUALIZAR</button>
+  </mat-dialog-actions>
+
+</form>
