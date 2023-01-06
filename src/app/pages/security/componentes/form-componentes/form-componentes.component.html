@@ -1,19 +1,19 @@
-<form (ngSubmit)="save()" [formGroup]="form">
-  <div class="flex-row justify-start items-center" mat-dialog-title>
-    <h2 class="headline m-0 flex-1">{{ tituloForm }}</h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-      <mat-icon svgIcon="mat:close"></mat-icon>
-    </button>
-  </div>
+<div class="flex flex-row justify-start items-center" mat-dialog-title>
+  <h2 class="headline m-0 flex-1">{{ tituloForm }}</h2>
+  <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+    <mat-icon svgIcon="mat:close"></mat-icon>
+  </button>
+</div>
 
-  <mat-divider class="-mx-6 text-border"></mat-divider>
+<mat-divider class="-mx-6 text-border"></mat-divider>
 
-  <mat-dialog-content fxLayout="column">
-    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+<mat-dialog-content fxLayout="column">
+  <form (ngSubmit)="save()" [formGroup]="form">
+    <div class="flex-col sm:flex-row sm:gap-8 gap-0">
       <div class="sm:my-6 sm:py-4 my-3 py-2 flex-1">
         <mat-checkbox color="primary" formControlName="isComponentePadre">¿Es componente padre?</mat-checkbox>
       </div>
-      <mat-form-field @fadeInUp class="mt-6 flex-1" *ngIf="showHideComponentesPadre()">
+      <mat-form-field @fadeInUp class="mt-3 flex-1" *ngIf="showHideComponentesPadre()">
         <mat-label>Seleccionar componente padre</mat-label>
         <mat-select formControlName="idComponentePadre">
           <mat-option *ngFor="let cp of componentesPadre" [value]="cp.idComponente"
@@ -26,7 +26,7 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+    <div class="flex-col sm:flex-row sm:gap-8 gap-0">
       <mat-form-field class="flex-1">
         <mat-label>Componente</mat-label>
         <input cdkFocusInitial formControlName="componente" matInput placeholder="Ejm: Mantenimiento" required>
@@ -41,7 +41,7 @@
       </mat-form-field>
 
     </div>
-    <div class="flex-col sm:flex-row sm:gap-10 gap-0">
+    <div class="flex-col sm:flex-row sm:gap-8 gap-0">
       <mat-form-field class="flex-1">
         <mat-label>Icono</mat-label>
         <input formControlName="icono" matInput placeholder="Ejm: edit (ver 'Material Icons')" required>
@@ -60,13 +60,13 @@
       <textarea formControlName="descripcion" matInput
         placeholder="Escribir una breve descripción del componente"></textarea>
     </mat-form-field>
-  </mat-dialog-content>
+  </form>
+</mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close type="button">CANCELAR</button>
-    <button [disabled]="form.invalid" *ngIf="isCreateMode()" mat-button type="submit"
-      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">REGISTRAR</button>
-    <button fxFlex.xs="auto" fxFlex="none" [disabled]="form.invalid" *ngIf="isUpdateMode()" mat-button type="submit"
-      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">ACTUALIZAR</button>
-  </mat-dialog-actions>
-</form>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">CANCELAR</button>
+  <button [disabled]="form.invalid" *ngIf="isCreateMode()" mat-button type="submit"
+    [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">REGISTRAR</button>
+  <button fxFlex.xs="auto" fxFlex="none" [disabled]="form.invalid" *ngIf="isUpdateMode()" mat-button type="submit"
+    [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">ACTUALIZAR</button>
+</mat-dialog-actions>

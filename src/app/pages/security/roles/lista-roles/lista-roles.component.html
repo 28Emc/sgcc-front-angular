@@ -19,10 +19,10 @@
         <h2 class="title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l hide-xs">
           <span>Roles</span>
         </h2>
-        <div class="bg-card rounded-full border px-4 flex-row justify-start items-center">
+        <div class="bg-white rounded-full border px-4 flex-row justify-start items-center">
           <mat-icon svgIcon="mat:search"></mat-icon>
-          <input [formControl]="searchCtrl" class="px-4 py-3 border-0 outline-none w-full bg-transparent"
-            placeholder="Buscar.." type="search" [readonly]="loading" autocomplete="false">
+          <input [formControl]="searchCtrl" class="px-4 py-3 border-0 outline-none w-full" placeholder="Buscar.."
+            type="search" [readonly]="loading" autocomplete="false">
         </div>
         <span class="flex-1"></span>
         <button (click)="registrarRol()" class="ml-4 bg-teal text-white" mat-icon-button matTooltip="Registrar rol"
@@ -34,7 +34,8 @@
       <mat-progress-bar mode="indeterminate" *ngIf="loading === true"></mat-progress-bar>
 
       <div class="table-container">
-        <table aria-hidden="true" @stagger [dataSource]="dataSource" class="w-full" mat-table matSort tableResponsive>
+        <table aria-hidden="true" @stagger [dataSource]="dataSource" class="w-full" mat-table matSort
+          matTableResponsive>
           <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
             <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
               <th id *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
@@ -48,10 +49,11 @@
           <ng-container matColumnDef="acciones">
             <th id *matHeaderCellDef mat-header-cell>ACCIONES</th>
             <td *matCellDef="let row" class="sm:w-10 w-auto text-secondary" mat-cell>
-              <button class="text-accent btn-tel" (click)="actualizarRol(row)" mat-icon-button matTooltip="Editar rol">
+              <button class="hover:text-orange trans-ease-out btn-tel" (click)="actualizarRol(row)" mat-icon-button
+                matTooltip="Editar rol">
                 <mat-icon svgIcon="mat:edit"></mat-icon>
               </button>
-              <button class="text-cyan btn-tel" (click)="editarPermisosPorRol(row)" mat-icon-button
+              <button class="hover:text-cyan trans-ease-out btn-tel" (click)="editarPermisosPorRol(row)" mat-icon-button
                 matTooltip="Editar permisos">
                 <mat-icon svgIcon="mat:policy"></mat-icon>
               </button>

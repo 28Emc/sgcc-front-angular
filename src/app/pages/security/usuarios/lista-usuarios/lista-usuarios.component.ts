@@ -89,7 +89,7 @@ export class ListaUsuariosComponent implements OnInit, OnDestroy {
 
   getUsuarios(): void {
     this.loading = true;
-    this.textTable = 'Cargando información';
+    this.textTable = 'Cargando información...';
     this.subList = this.mantenimientoService.obtenerUsuarios().subscribe({
       next: (res) => {
         this.loading = false;
@@ -97,10 +97,7 @@ export class ListaUsuariosComponent implements OnInit, OnDestroy {
         this.dataSource.data = this.usuarios;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        if (this.usuarios.length === 0) {
-          this.textTable = 'No hay usuarios por mostrar.';
-        }
+        this.textTable = (this.usuarios.length === 0) ? 'No hay usuarios por mostrar.' : '';
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -195,7 +192,7 @@ export class ListaUsuariosComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.registrarUsuario(usuario).subscribe({
             next: () => {
               this.loading = false;
-              this.notificacionService.showMessage('Usuario creado correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage('Usuario creado correctamente.', 'SUCCESS', null, 'center');
               this.getUsuarios();
             },
             error: (err: HttpErrorResponse) => {
@@ -229,7 +226,7 @@ export class ListaUsuariosComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.actualizarUsuario(updatedUsuario.idUsuario.toString(), updatedUsuario).subscribe({
             next: (res: any) => {
               this.loading = false;
-              this.notificacionService.showMessage(res.message ? res.message : 'Usuario actualizado correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage(res.message ? res.message : 'Usuario actualizado correctamente.', 'SUCCESS', null, 'center');
               this.getUsuarios();
             },
             error: (err: HttpErrorResponse) => {
@@ -252,7 +249,7 @@ export class ListaUsuariosComponent implements OnInit, OnDestroy {
     this.subList = this.mantenimientoService.actualizarEstadoUsuario(updateEstadoBody).subscribe({
       next: (res: any) => {
         this.loading = false;
-        this.notificacionService.showMessage(res.message ? res.message : 'Estado del usuario actualizado correctamente.', 'SUCCESS');
+        this.notificacionService.showMessage(res.message ? res.message : 'Estado del usuario actualizado correctamente.', 'SUCCESS', null, 'center');
         this.getUsuarios();
       },
       error: (err: HttpErrorResponse) => {

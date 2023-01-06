@@ -26,6 +26,51 @@ const routes: VexRoutes = [
           }
         ]
       },
+      {
+        path: 'mantenimiento',
+        children: [
+          {
+            path: 'inquilinos',
+            loadChildren: () => import('./pages/settings/inquilinos/inquilinos.module').then(m => m.InquilinosModule),
+            title: `Mantenimiento Inquilinos | ${environment.tituloSistemaFull}`
+          },
+          {
+            path: 'tipos-recibo',
+            loadChildren: () => import('./pages/settings/tipos-recibo/tipos-recibo.module').then(m => m.TiposReciboModule),
+            title: `Mantenimiento Tipos Recibo | ${environment.tituloSistemaFull}`
+          },
+          {
+            path: 'recibos',
+            loadChildren: () => import('./pages/settings/recibos/recibos.module').then(m => m.RecibosModule),
+            title: `Mantenimiento Recibos | ${environment.tituloSistemaFull}`
+          },
+          {
+            path: 'lecturas-medidor',
+            loadChildren: () => import('./pages/settings/lecturas-medidor/lecturas-medidor.module').then(m => m.LecturasMedidorModule),
+            title: `Mantenimiento Lect. Medidor | ${environment.tituloSistemaFull}`
+          }
+        ]
+      },
+      {
+        path: 'seguridad',
+        children: [
+          {
+            path: 'roles',
+            loadChildren: () => import('./pages/security/roles/roles.module').then(m => m.RolesModule),
+            title: `Seguridad Roles | ${environment.tituloSistemaFull}`
+          },
+          {
+            path: 'usuarios',
+            loadChildren: () => import('./pages/security/usuarios/usuarios.module').then(m => m.UsuariosModule),
+            title: `Seguridad Usuarios | ${environment.tituloSistemaFull}`
+          },
+          {
+            path: 'componentes',
+            loadChildren: () => import('./pages/security/componentes/componentes.module').then(m => m.ComponentesModule),
+            title: `Seguridad Componentes | ${environment.tituloSistemaFull}`
+          },
+        ]
+      },
       // TODO: AGREGAR MÁS COMPONENTES
       {
         path: '**',

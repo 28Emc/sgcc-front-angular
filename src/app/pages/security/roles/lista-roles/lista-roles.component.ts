@@ -82,7 +82,7 @@ export class ListaRolesComponent implements OnInit, OnDestroy {
 
   getRoles(): void {
     this.loading = true;
-    this.textTable = 'Cargando información';
+    this.textTable = 'Cargando información...';
     this.subList = this.mantenimientoService.obtenerRoles().subscribe({
       next: (res) => {
         this.loading = false;
@@ -90,10 +90,7 @@ export class ListaRolesComponent implements OnInit, OnDestroy {
         this.dataSource.data = this.roles;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        if (this.roles.length === 0) {
-          this.textTable = 'No hay roles por mostrar.';
-        }
+        this.textTable = (this.roles.length === 0) ? 'No hay roles por mostrar.' : '';
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -143,7 +140,7 @@ export class ListaRolesComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.registrarRol(rol).subscribe({
             next: () => {
               this.loading = false;
-              this.notificacionService.showMessage('Rol creado correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage('Rol creado correctamente.', 'SUCCESS', null, 'center');
               this.getRoles();
             },
             error: (err: HttpErrorResponse) => {
@@ -176,7 +173,7 @@ export class ListaRolesComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.actualizarRol(updatedRol.id_rol.toString(), updatedRol).subscribe({
             next: () => {
               this.loading = false;
-              this.notificacionService.showMessage('Rol actualizado correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage('Rol actualizado correctamente.', 'SUCCESS', null, 'center');
               this.getRoles();
             },
             error: (err: HttpErrorResponse) => {
@@ -209,7 +206,7 @@ export class ListaRolesComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.actualizarPermisosPorRol(updatedData).subscribe({
             next: () => {
               this.loading = false;
-              this.notificacionService.showMessage('Permisos actualizados correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage('Permisos actualizados correctamente.', 'SUCCESS', null, 'center');
             },
             error: (err: HttpErrorResponse) => {
               this.loading = false;

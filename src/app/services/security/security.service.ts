@@ -1,5 +1,5 @@
 import { ILogout } from './../../models/ILogout.interface';
-import { Observable, BehaviorSubject, of, delay } from 'rxjs';
+import { Observable, BehaviorSubject, of, delay, tap } from 'rxjs';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -28,7 +28,7 @@ export class SecurityService {
     this.header = new HttpHeaders();
     this.header = this.header.append('Accept', 'application/json');
     this.header = this.header.append("Content-Type", "application/json");
-    this.header = this.header.append("Authorization", environment.secretKey);
+    // this.header = this.header.append("Authorization", environment.secretKey);
 
     this._creditoGestor$ = new BehaviorSubject<number>(null);
     this.creditosGestor$ = this._creditoGestor$.asObservable();
@@ -45,6 +45,24 @@ export class SecurityService {
     sessionStorage.setItem('user', JSON.stringify(user));
     sessionStorage.setItem('perm', JSON.stringify(permisos));
     sessionStorage.setItem('ss', JSON.stringify(sesion));
+  }
+
+  almacenarTokens(token: string, refreshToken: string): void {
+    sessionStorage.setItem('tkn', token);
+    sessionStorage.setItem('r-tkn', refreshToken);
+  }
+
+  obtenerAccessToken(): string {
+    return sessionStorage.getItem('tkn');
+  }
+
+  obtenerRefreshToken(): string {
+    return sessionStorage.getItem('r-tkn');
+  }
+
+  borrarTokens(): void {
+    sessionStorage.removeItem('tkn');
+    sessionStorage.removeItem('r-tkn');
   }
 
   obtenerInfoUsuarioSessionStorage(): any {
@@ -96,35 +114,28 @@ export class SecurityService {
   }
 
   login(dataLogin: ILogin): Observable<any> {
-    return of({
-      message: 'Inicio de sesión correcto',
-      details: {
-        ruta: '/home',
-        token: '$FAKE$TOKEN$',
-        user: this.fakeUserPersona,
-        permisos: this.fakePermisos,
-        sesion: this.fakeSesion
-      },
-    });
+    let headers = this.header;
+    headers = headers.delete('Content-Type');
+    const form: FormData = new FormData();
+    form.append('usuario', dataLogin.usuario);
+    form.append('password', dataLogin.password);
+    return this.http.post(`${this.urlBase}/auth/login`, form, { headers });
+  }
 
-    // FIXME: INTEGRAR CON BACKEND
-    /* let headers = this.header;
-    return this.http.post(`${this.urlBase}/auth/login`, data, { headers }); */
+  getAdditionalUserInfo(usuario: string): Observable<any> {
+    let headers = this.header;
+    return this.http.get(`${this.urlBase}/auth/additional-info/${usuario}`, { headers });
   }
 
   refreshToken(): Observable<any> {
-    return of('$REFRESH$TOKEN$');
-
-    // FIXME: INTEGRAR CON BACKEND
-    /* let headers = this.header;
-    return this.http.post(`${this.urlBase}/auth/refresh`, null, { headers }); */
+    let headers = this.header;
+    headers = headers.set('Authorization', 'Bearer ' + this.obtenerRefreshToken());
+    return this.http.post(`${this.urlBase}/auth/token/refresh`, null, { headers })
+      .pipe(tap((resToken: any) => this.almacenarTokens(resToken.accessToken, resToken.refreshToken)));
   }
 
-  cerrarSesión(dataLogout: ILogout) {
+  cerrarSesión(dataLogout: ILogout): Observable<any> {
+    this.borrarTokens();
     return of(dataLogout);
-
-    // FIXME: INTEGRAR CON BACKEND
-    /* let headers = this.header;
-    return this.http.put(`${this.urlBase}/auth/logout`, data, { headers }); */
   }
 }

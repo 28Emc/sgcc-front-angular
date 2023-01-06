@@ -1,4 +1,3 @@
-import { NavigationSubheading } from './../../../../@vex/interfaces/navigation-item.interface';
 import { NotificacionService } from './../../../services/notificacion/notificacion.service';
 import { NavigationService } from './../../../../@vex/services/navigation.service';
 import { SecurityService } from './../../../services/security/security.service';
@@ -10,7 +9,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
-import { IUserLogin } from 'src/app/models/IUser.model';
 import { NavigationDropdown, NavigationLink } from 'src/@vex/interfaces/navigation-item.interface';
 import { IComponentesResponse } from 'src/app/models/IComponentesResponse.interface';
 
@@ -103,22 +101,42 @@ export class LoginComponent implements OnInit {
     this.form.disable();
 
     this.subList = this.securityService.login(this.form.getRawValue()).subscribe({
-      next: res => {
-        this.loading = false;
-
-        if (!res.details || !res.details.ruta) {
+      next: (resLogin: any) => {
+        if (!resLogin.usuario) {
           this.loading = false;
           this.form.enable();
           this.cd.detectChanges();
-          this.notificacionService.showMessage('No tienes los permisos suficientes para acceder al sistema. Contacte con el administrador.', 'WARNING');
+          this.notificacionService.showMessage('Error de inicio de sesión.', 'ERROR');
           return;
         }
 
-        this.form.enable();
-        this.cd.detectChanges();
-        let permisos = res.details.permisos.filter(p => p.estado === 'A');
-        this.organizarComponentes(res.details.user, permisos, res.details.sesion);
-        this.router.navigate([res.details.ruta]);
+        this.securityService.almacenarTokens(resLogin.accessToken, resLogin.refreshToken);
+
+        this.securityService.getAdditionalUserInfo(resLogin.usuario).subscribe({
+          next: (resInfo: any) => {
+            if (!resInfo.details || !resInfo.details.ruta || resInfo.details.permisos.length == 0) {
+              this.loading = false;
+              this.form.enable();
+              this.cd.detectChanges();
+              this.notificacionService.showMessage('No tienes los permisos suficientes para acceder al sistema. Contacte con el administrador.', 'WARNING');
+              return;
+            }
+
+            this.loading = false;
+            this.form.enable();
+            this.cd.detectChanges();
+            let permisos = resInfo.details.permisos.filter(p => p.estado === 'A');
+            this.organizarComponentes(resInfo.details.user, permisos, resInfo.details.sesion);
+            this.router.navigate([resInfo.details.ruta]);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.loading = false;
+            this.form.enable();
+            this.cd.detectChanges();
+            console.error({ err });
+            this.notificacionService.showMessage((err.status != 500) ? err.error.message : 'Usuario o contraseña incorrectos.', 'ERROR');
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -131,28 +149,21 @@ export class LoginComponent implements OnInit {
   }
 
   organizarComponentes(user: any, resPermisos: any[], sesion: any): void {
-    // let arrComponentesPadre: NavigationDropdown[] = [];
-    let arrComponentesPadre: NavigationSubheading[] = []; // PARA ITEMS DE TIPO SUBHEADING
-    let padre: NavigationSubheading = {} as NavigationSubheading; // PARA ITEMS DE TIPO SUBHEADING
+    let arrComponentesPadre: NavigationDropdown[] = [];
+    // let arrComponentesPadre: NavigationSubheading[] = []; // PARA ITEMS DE TIPO SUBHEADING
+    // let padre: NavigationSubheading = {} as NavigationSubheading; // PARA ITEMS DE TIPO SUBHEADING
     let arrComponentesHijo: NavigationLink[] = [];
-
-    if (resPermisos.length == 0) {
-      this.form.enable();
-      this.cd.detectChanges();
-      this.notificacionService.showMessage('Error de inicio de sesión. Contactar a un administrador.', 'ERROR');
-      return;
-    }
 
     resPermisos.forEach((c: IComponentesResponse) => {
       if (c.id_componente_padre == 0) {
-        // let padre: NavigationDropdown = {} as NavigationDropdown;
-        // padre.type = 'dropdown';
-        padre.type = 'subheading'; // PARA ITEMS DE TIPO SUBHEADING
+        let padre: NavigationDropdown = {} as NavigationDropdown;
+        padre.type = 'dropdown';
+        // padre.type = 'subheading'; // PARA ITEMS DE TIPO SUBHEADING
         padre.label = c.componente;
-        // padre.icon = c.icono; // NO VA EN EL SUBHEADING
+        padre.icon = c.icono; // NO VA EN EL SUBHEADING
         padre.id_componente = c.id_componente;
         padre.id_componente_padre = c.id_componente_padre;
-        // padre.orden = c.orden; // NO VA EN EL SUBHEADING
+        padre.orden = c.orden; // NO VA EN EL SUBHEADING
         padre.children = [];
         arrComponentesPadre.push(padre);
       } else {
@@ -160,7 +171,7 @@ export class LoginComponent implements OnInit {
         hijo.id_componente = c.id_componente;
         hijo.id_componente_padre = c.id_componente_padre;
         hijo.type = 'link';
-        hijo.icon = c.icono; // SE AGREGA EN EL SUBHEADING
+        // hijo.icon = c.icono; // SE AGREGA EN EL SUBHEADING
         hijo.label = c.componente;
         hijo.route = c.ruta;
         hijo.orden = c.orden;
@@ -168,7 +179,7 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    // arrComponentesPadre.sort((a, b) => a.orden - b.orden); // NO VA EN EL SUBHEADING
+    arrComponentesPadre.sort((a, b) => a.orden - b.orden); // NO VA EN EL SUBHEADING
     arrComponentesHijo.sort((a, b) => a.orden - b.orden);
 
     if (arrComponentesPadre.length > 0 && arrComponentesHijo.length > 0) {
@@ -182,7 +193,6 @@ export class LoginComponent implements OnInit {
     }
 
     this.navigationService.items = arrComponentesPadre;
-    // sessionStorage.setItem('perm', JSON.stringify(this.navigationService.items));
     this.securityService.almacenarInfoUsuarioSessionStorage({ user, permisos: arrComponentesPadre, sesion });
   }
 

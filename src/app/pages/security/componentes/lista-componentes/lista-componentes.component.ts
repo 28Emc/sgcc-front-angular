@@ -94,10 +94,7 @@ export class ListaComponentesComponent implements OnInit, OnDestroy {
         this.dataSource.data = this.componentes;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        if (this.componentes.length === 0) {
-          this.textTable = 'No hay componentes por mostrar.';
-        }
+        this.textTable = (this.componentes.length === 0) ? 'No hay componentes por mostrar.' : '';
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -149,7 +146,7 @@ export class ListaComponentesComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.registrarComponente(componente).subscribe({
             next: () => {
               this.loading = false;
-              this.notificacionService.showMessage('Componente creado correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage('Componente creado correctamente.', 'SUCCESS', null, 'center');
               this.getComponentes();
             },
             error: (err: HttpErrorResponse) => {
@@ -183,7 +180,7 @@ export class ListaComponentesComponent implements OnInit, OnDestroy {
           this.subList = this.mantenimientoService.actualizarComponente(updatedComponente.idComponente.toString(), updatedComponente).subscribe({
             next: () => {
               this.loading = false;
-              this.notificacionService.showMessage('Componente actualizado correctamente.', 'SUCCESS');
+              this.notificacionService.showMessage('Componente actualizado correctamente.', 'SUCCESS', null, 'center');
               this.getComponentes();
             },
             error: (err: HttpErrorResponse) => {
@@ -206,7 +203,7 @@ export class ListaComponentesComponent implements OnInit, OnDestroy {
     this.subList = this.mantenimientoService.actualizarEstadoComponente(updateEstadoBody).subscribe({
       next: () => {
         this.loading = false;
-        this.notificacionService.showMessage('Estado del componente actualizado correctamente.', 'SUCCESS');
+        this.notificacionService.showMessage('Estado del componente actualizado correctamente.', 'SUCCESS', null, 'center');
         this.getComponentes();
       },
       error: (err: HttpErrorResponse) => {

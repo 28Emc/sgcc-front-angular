@@ -1,14 +1,14 @@
-<form (ngSubmit)="save()" [formGroup]="form">
-  <div class="flex-row justify-start items-center" mat-dialog-title>
-    <h2 class="headline m-0 flex-1">{{ tituloForm }}</h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-      <mat-icon svgIcon="mat:close"></mat-icon>
-    </button>
-  </div>
+<div class="flex flex-row justify-start items-center" mat-dialog-title>
+  <h2 class="headline m-0 flex-1">{{ tituloForm }}</h2>
+  <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+    <mat-icon svgIcon="mat:close"></mat-icon>
+  </button>
+</div>
 
-  <mat-divider class="-mx-6 text-border"></mat-divider>
+<mat-divider class="-mx-6 text-border"></mat-divider>
 
-  <mat-dialog-content class="flex-col">
+<mat-dialog-content class="flex-col">
+  <form (ngSubmit)="save()" [formGroup]="form">
     <div class="flex flex-col sm:flex-row">
       <mat-form-field class="mt-6 flex-1">
         <mat-label>Rol</mat-label>
@@ -17,18 +17,19 @@
         <mat-error *ngIf="form.get('rol').hasError('required')">Rol requerido</mat-error>
       </mat-form-field>
     </div>
-    <mat-form-field class="flex-1">
+    <mat-form-field class="flex-1 w-full">
       <mat-label>Descripción (opcional)</mat-label>
       <textarea formControlName="descripcion" matInput placeholder="Escribir una breve descripción del rol"></textarea>
     </mat-form-field>
-  </mat-dialog-content>
+  </form>
+</mat-dialog-content>
 
-  <!-- FIXME: AGREGAR FORMULARIO A PASOS PARA REGISTRAR/ACTUALIZAR ROL Y ASIGNAR/EDITAR PERMISOS A COMPONENTES. -->
+<!-- FIXME: AGREGAR FORMULARIO A PASOS PARA REGISTRAR/ACTUALIZAR ROL Y ASIGNAR/EDITAR PERMISOS A COMPONENTES. -->
 
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close type="button">CANCELAR</button>
-    <button [disabled]="form.invalid" *ngIf="isCreateMode()" mat-button type="submit"
-      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">REGISTRAR</button>
-    <button [disabled]="form.invalid" *ngIf="isUpdateMode()" mat-button type="submit"
-      [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">ACTUALIZAR</button>
-  </mat-dialog-actions>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">CANCELAR</button>
+  <button [disabled]="form.invalid" *ngIf="isCreateMode()" mat-button type="submit"
+    [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">REGISTRAR</button>
+  <button [disabled]="form.invalid" *ngIf="isUpdateMode()" mat-button type="submit"
+    [ngClass]="form.invalid ? '' : 'bg-primary text-primary-contrast'">ACTUALIZAR</button>
+</mat-dialog-actions>
