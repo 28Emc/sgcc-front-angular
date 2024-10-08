@@ -1,5 +1,8 @@
 :root {
-  .mat-button, .mat-stroked-button, .mat-flat-button, .mat-raised-button {
+  .mat-mdc-button,
+  .mat-mdc-outlined-button,
+  .mat-mdc-unelevated-button,
+  .mat-mdc-raised-button {
     @apply rounded-button min-w-[6rem];
   }
 
@@ -19,9 +22,9 @@
     @apply font-medium;
   }
 
-  .mat-button-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .mat-mdc-icon-button {
+    .mat-icon {
+      @apply inline-flex items-center justify-center;
+    }
   }
 }

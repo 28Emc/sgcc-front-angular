@@ -1,90 +1,91 @@
-import { NotificacionService } from './../../../services/notificacion/notificacion.service';
-import { NavigationService } from './../../../../@vex/services/navigation.service';
-import { SecurityService } from './../../../services/security/security.service';
-import { environment } from './../../../../environments/environment';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject
+} from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { fadeInUp400ms } from '@vex/animations/fade-in-up.animation';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { SecurityService } from 'src/app/services/security.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
-import { NavigationDropdown, NavigationLink } from 'src/@vex/interfaces/navigation-item.interface';
-import { IComponentesResponse } from 'src/app/models/IComponentesResponse.interface';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ActionButtonComponent } from "../../../shared/action-button/action-button.component";
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'vex-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  animations: [fadeInUp400ms]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [fadeInUp400ms],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgIf,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatProgressBarModule,
+    RouterLink,
+    ActionButtonComponent
+  ]
 })
-export class LoginComponent implements OnInit {
-  form: FormGroup;
-  inputType: 'password' | 'text' = 'password';
-  visible: boolean = false;
+export class LoginComponent {
+  form = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required]
+  });
+  inputType = 'password';
+  visible = false;
   loading: boolean = false;
-  subList: Subscription = new Subscription();
-  usuarioValidation = { minLength: 5, maxLength: 30 };
-  passwordValidation = { minLength: 6, maxLength: 30 };
-  usuarioFormErrors = {
-    required: 'Este campo es requerido',
-    minlength: 'Este campo debe tener 5 caracteres como mínimo',
-    maxlength: 'Este campo debe tener 30 caracteres como maximo',
-  };
-  passwordFormErrors = {
-    required: 'Este campo es requerido',
-    minlength: 'Este campo debe tener 6 caracteres como mínimo',
-    maxlength: 'Este campo debe tener 30 caracteres como maximo',
-  };
+  securityService = inject(SecurityService);
+  notificationService = inject(NotificationService);
 
   constructor(
-    private router: Router,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef,
-    private snackbar: MatSnackBar,
-    private navigationService: NavigationService,
-    private securityService: SecurityService,
-    private notificacionService: NotificacionService
-  ) { }
+    private readonly router: Router,
+    private readonly fb: FormBuilder,
+    private readonly cd: ChangeDetectorRef
+  ) {
+    sessionStorage.clear();
+  }
 
-  ngOnInit(): void {
-    const usuarioValidators: Validators[] = [
-      Validators.required
-    ];
-    const passwordValidators: Validators[] = [
-      Validators.required
-    ];
+  login(): void {
+    this.loading = true;
+    this.form.disable();
+    this.securityService.login(this.form.getRawValue()).subscribe({
+      next: payload => {
+        this.loading = false;
+        this.form.enable();
 
-    if (environment.production) {
-      usuarioValidators.push(Validators.minLength(this.usuarioValidation.minLength));
-      usuarioValidators.push(Validators.maxLength(this.usuarioValidation.maxLength));
-      passwordValidators.push(Validators.minLength(this.passwordValidation.minLength));
-      passwordValidators.push(Validators.maxLength(this.passwordValidation.maxLength));
-    }
-
-    this.form = this.fb.group({
-      usuario: ['', usuarioValidators],
-      password: ['', passwordValidators]
+        this.securityService.storeTokenData(payload.data['token'], payload.data['refresh_token']);
+        this.securityService.storeUserData(payload.data['user']);
+        this.securityService.storeSystemOptions(payload.data['options']);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.form.enable();
+        this.notificationService.showSnackbar((error as Error).message || 'Error de inicio de sesión', 'ERROR');
+      },
+      complete: () => {
+        this.loading = false;
+        this.form.enable();
+      }
     });
   }
 
-  ngOnDestroy(): void {
-    this.subList.unsubscribe();
-  }
-
-  get usuario(): FormControl {
-    return <FormControl>this.form.get('usuario');
-  }
-
-  get password(): FormControl {
-    return <FormControl>this.form.get('password');
-  }
-
-  errors(ctrl: FormControl): string[] {
-    return ctrl.errors ? Object.keys(ctrl.errors) : [];
-  }
-
-  verOcultarPassword(): void {
+  toggleVisibility(): void {
     if (this.visible) {
       this.inputType = 'password';
       this.visible = false;
@@ -93,112 +94,6 @@ export class LoginComponent implements OnInit {
       this.inputType = 'text';
       this.visible = true;
       this.cd.markForCheck();
-    }
-  }
-
-  iniciarSesion(): void {
-    this.loading = true;
-    this.form.disable();
-
-    this.subList = this.securityService.login(this.form.getRawValue()).subscribe({
-      next: (resLogin: any) => {
-        if (!resLogin.usuario) {
-          this.loading = false;
-          this.form.enable();
-          this.cd.detectChanges();
-          this.notificacionService.showMessage('Error de inicio de sesión.', 'ERROR');
-          return;
-        }
-
-        this.securityService.almacenarTokens(resLogin.accessToken, resLogin.refreshToken);
-
-        this.securityService.getAdditionalUserInfo(resLogin.usuario).subscribe({
-          next: (resInfo: any) => {
-            if (!resInfo.details || !resInfo.details.ruta || resInfo.details.permisos.length == 0) {
-              this.loading = false;
-              this.form.enable();
-              this.cd.detectChanges();
-              this.notificacionService.showMessage('No tienes los permisos suficientes para acceder al sistema. Contacte con el administrador.', 'WARNING');
-              return;
-            }
-
-            this.loading = false;
-            this.form.enable();
-            this.cd.detectChanges();
-            let permisos = resInfo.details.permisos.filter(p => p.estado === 'A');
-            this.organizarComponentes(resInfo.details.user, permisos, resInfo.details.sesion);
-            this.router.navigate([resInfo.details.ruta]);
-          },
-          error: (err: HttpErrorResponse) => {
-            this.loading = false;
-            this.form.enable();
-            this.cd.detectChanges();
-            console.error({ err });
-            this.notificacionService.showMessage((err.status != 500) ? err.error.message : 'Usuario o contraseña incorrectos.', 'ERROR');
-          }
-        });
-      },
-      error: (err: HttpErrorResponse) => {
-        this.loading = false;
-        this.form.enable();
-        this.cd.detectChanges();
-        console.error({ err });
-        this.notificacionService.showMessage((err.status != 500) ? err.error.message : 'Usuario o contraseña incorrectos.', 'ERROR');
-      }
-    });
-  }
-
-  organizarComponentes(user: any, resPermisos: any[], sesion: any): void {
-    let arrComponentesPadre: NavigationDropdown[] = [];
-    // let arrComponentesPadre: NavigationSubheading[] = []; // PARA ITEMS DE TIPO SUBHEADING
-    // let padre: NavigationSubheading = {} as NavigationSubheading; // PARA ITEMS DE TIPO SUBHEADING
-    let arrComponentesHijo: NavigationLink[] = [];
-
-    resPermisos.forEach((c: IComponentesResponse) => {
-      if (c.id_componente_padre == 0) {
-        let padre: NavigationDropdown = {} as NavigationDropdown;
-        padre.type = 'dropdown';
-        // padre.type = 'subheading'; // PARA ITEMS DE TIPO SUBHEADING
-        padre.label = c.componente;
-        padre.icon = c.icono; // NO VA EN EL SUBHEADING
-        padre.id_componente = c.id_componente;
-        padre.id_componente_padre = c.id_componente_padre;
-        padre.orden = c.orden; // NO VA EN EL SUBHEADING
-        padre.children = [];
-        arrComponentesPadre.push(padre);
-      } else {
-        let hijo: NavigationLink = {} as NavigationLink;
-        hijo.id_componente = c.id_componente;
-        hijo.id_componente_padre = c.id_componente_padre;
-        hijo.type = 'link';
-        // hijo.icon = c.icono; // SE AGREGA EN EL SUBHEADING
-        hijo.label = c.componente;
-        hijo.route = c.ruta;
-        hijo.orden = c.orden;
-        arrComponentesHijo.push(hijo);
-      }
-    });
-
-    arrComponentesPadre.sort((a, b) => a.orden - b.orden); // NO VA EN EL SUBHEADING
-    arrComponentesHijo.sort((a, b) => a.orden - b.orden);
-
-    if (arrComponentesPadre.length > 0 && arrComponentesHijo.length > 0) {
-      arrComponentesPadre.forEach(padre => {
-        arrComponentesHijo.forEach(hijo => {
-          if (padre.id_componente == hijo.id_componente_padre) {
-            padre.children.push(hijo);
-          }
-        });
-      });
-    }
-
-    this.navigationService.items = arrComponentesPadre;
-    this.securityService.almacenarInfoUsuarioSessionStorage({ user, permisos: arrComponentesPadre, sesion });
-  }
-
-  restorePassword(): void {
-    if (!this.loading || this.form.enabled) {
-      this.router.navigate(['/auth/olvidar-password']);
     }
   }
 }

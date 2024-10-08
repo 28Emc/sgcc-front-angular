@@ -1,9 +1,16 @@
-import { animateChild, query, stagger, transition, trigger } from '@angular/animations';
+import {
+  animateChild,
+  query,
+  stagger,
+  transition,
+  trigger
+} from '@angular/animations';
 
 export function staggerAnimation(timing: number) {
   return trigger('stagger', [
-    transition('* => *', [ // each time the binding value changes
-      query(':enter', stagger(timing, animateChild()), { optional: true }),
+    transition('* => *', [
+      // each time the binding value changes
+      query(':enter', stagger(timing, animateChild()), { optional: true })
     ])
   ]);
 }

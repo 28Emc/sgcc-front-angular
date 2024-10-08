@@ -1,29 +1,29 @@
 .vex-layout-ares {
+  --vex-sidenav-background: var(--vex-background-background);
+  --vex-toolbar-background: var(--vex-background-background);
 
-  --footer-background: var(--background-base);
-  --sidenav-background: var(--background-base);
-  --toolbar-background: var(--background-base);
+  --vex-sidenav-color: theme("textColor.default");
+  --vex-sidenav-section-divider-color: transparent;
+  --vex-sidenav-item-background-hover: rgb(var(--vex-color-primary-600) / 0.1);
+  --vex-sidenav-item-background-active: var(--vex-background-card);
+  --vex-sidenav-item-color: theme("textColor.default");
+  --vex-sidenav-item-color-hover: theme("textColor.default");
+  --vex-sidenav-item-color-active: theme("textColor.default");
+  --vex-sidenav-item-dropdown-color-active: var(
+      --vex-sidenav-item-color-active
+  );
+  --vex-sidenav-item-dropdown-background-active: var(--vex-background-hover);
 
-  --sidenav-color: var(--text-color);
-  --sidenav-section-divider-color: transparent;
-  --sidenav-item-background-hover: rgba(var(--color-primary), 0.1);
-  --sidenav-item-background-active: var(--background-foreground);
-  --sidenav-item-color: var(--text-color);
-  --sidenav-item-color-hover: var(--text-color);
-  --sidenav-item-color-active: var(--text-color);
-  --sidenav-item-dropdown-color-active: var(--sidenav-item-color-active);
-  --sidenav-item-dropdown-background-active: var(--background-hover);
+  --vex-sidenav-item-dropdown-background: var(--vex-background-background);
+  --vex-sidenav-item-dropdown-background-hover: var(--vex-background-hover);
 
-  --sidenav-item-dropdown-background: var(--background-base);
-  --sidenav-item-dropdown-background-hover: var(--background-hover);
+  --vex-secondary-toolbar-background: var(--vex-background-background);
 
-  --secondary-toolbar-background: var(--background-base);
+  --vex-sidenav-toolbar-background: var(--vex-background-background);
 
-  --sidenav-toolbar-background: var(--background-base);
+  --vex-secondary-toolbar-height: 64px;
 
-  --secondary-toolbar-height: 64px;
-
-  .sidenav {
+  .vex-sidenav {
     border: none;
 
     vex-sidenav-item {
@@ -44,25 +44,29 @@
         @apply shadow-none font-medium;
 
         .vex-sidenav-item__label {
-          @apply text-black;
+          @apply text-default;
         }
       }
 
       .item-level-1 .vex-sidenav-item:hover .vex-sidenav-item__label {
-        @apply text-black;
+        @apply text-default;
       }
     }
   }
 
-  .sidenav-collapsed .sidenav vex-sidenav-item .vex-sidenav-item {
+  .vex-layout-sidenav-collapsed .vex-sidenav vex-sidenav-item .vex-sidenav-item {
     @apply mx-0;
   }
 
+  vex-toolbar {
+    @apply border-b-0;
+  }
+
   vex-secondary-toolbar {
-    @apply rounded-b overflow-hidden;
+    @apply rounded-b;
 
     .secondary-toolbar {
-      @apply shadow-none border-t-0 -mb-gutter;
+      @apply bg-transparent shadow-none border-t-0 border-b-0 -mb-6;
     }
   }
 
@@ -71,21 +75,15 @@
   }
 
   .vex-page-layout-header {
-    background: var(--background-base);
-    color: var(--text-color);
-
-    vex-breadcrumbs {
-      .text-hint {
-        color: var(--text-hint) !important;
-      }
-    }
+    background: var(--vex-background-background);
+    color: theme("textColor.default");
   }
 
   &.vex-style-default {
-    --sidenav-item-background-active: theme('backgroundColor.primary');
-    --sidenav-item-color-active: theme('textColor.primary-contrast');
-    --sidenav-item-dropdown-color-active: var(--sidenav-item-color);
-    --sidenav-item-dropdown-color-hover: var(--text-color);
-    --sidenav-item-icon-color-active: theme('textColor.primary-contrast');
+    --vex-sidenav-item-background-active: theme("backgroundColor.primary.600");
+    --vex-sidenav-item-color-active: theme("textColor.on-primary.600");
+    --vex-sidenav-item-dropdown-color-active: var(--vex-sidenav-item-color);
+    --vex-sidenav-item-dropdown-color-hover: theme("textColor.default");
+    --vex-sidenav-item-icon-color-active: theme("textColor.on-primary.600");
   }
 }

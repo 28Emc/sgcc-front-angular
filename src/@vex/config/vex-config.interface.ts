@@ -1,24 +1,37 @@
-import { VexConfigName } from './config-name.model';
-import { ColorSchemeName } from './colorSchemeName';
 import { CSSValue } from '../interfaces/css-value.type';
+
+export enum VexTheme {
+  DEFAULT = 'vex-theme-default',
+  TEAL = 'vex-theme-teal'
+}
+
+export enum VexConfigName {
+  apollo = 'apollo',
+  zeus = 'zeus',
+  hermes = 'hermes',
+  poseidon = 'poseidon',
+  ares = 'ares',
+  ikaros = 'ikaros'
+}
+
+export enum VexColorScheme {
+  LIGHT = 'light',
+  DARK = 'dark'
+}
 
 export interface VexConfig {
   id: VexConfigName;
   name: string;
+  bodyClass: string;
   imgSrc: string;
   direction: 'ltr' | 'rtl';
   style: {
-    colorScheme: ColorSchemeName,
-    colors: {
-      primary: {
-        default: string;
-        contrast: string;
-      }
-    };
+    themeClassName: string;
+    colorScheme: VexColorScheme;
     borderRadius: CSSValue;
     button: {
       borderRadius: CSSValue | undefined;
-    }
+    };
   };
   layout: 'vertical' | 'horizontal';
   boxed: boolean;
@@ -38,7 +51,7 @@ export interface VexConfig {
     fixed: boolean;
     user: {
       visible: boolean;
-    }
+    };
   };
   navbar: {
     position: 'below-toolbar' | 'in-toolbar';
@@ -47,4 +60,11 @@ export interface VexConfig {
     visible: boolean;
     fixed: boolean;
   };
+}
+
+export type VexConfigs = Record<VexConfigName, VexConfig>;
+
+export interface VexThemeProvider {
+  name: string;
+  className: string;
 }

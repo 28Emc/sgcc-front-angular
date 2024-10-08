@@ -7,10 +7,13 @@ export function scaleFadeInAnimation(duration: number) {
         transform: 'scale(0.8)',
         opacity: 0
       }),
-      animate(`${duration}ms cubic-bezier(0.35, 0, 0.25, 1)`, style({
-        transform: 'scale(1)',
-        opacity: 1
-      }))
+      animate(
+        `${duration}ms cubic-bezier(0.35, 0, 0.25, 1)`,
+        style({
+          transform: 'scale(1)',
+          opacity: 1
+        })
+      )
     ])
   ]);
 }

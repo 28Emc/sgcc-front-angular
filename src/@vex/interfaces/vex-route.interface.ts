@@ -3,7 +3,7 @@ import { Route } from '@angular/router';
 export interface VexRouteData {
   scrollDisabled?: boolean;
   toolbarShadowEnabled?: boolean;
-  containerEnabled?: boolean;
+  footerVisible?: boolean;
 
   [key: string]: any;
 }

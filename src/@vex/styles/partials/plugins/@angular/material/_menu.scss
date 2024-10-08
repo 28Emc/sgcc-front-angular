@@ -1,37 +1,53 @@
 :root {
-  .mat-menu-panel {
-    @apply rounded shadow;
+  .dark .mat-mdc-menu-panel {
+    @apply border-gray-600;
   }
 
-  .mat-menu-content {
+  .mat-mdc-menu-panel {
+    @apply rounded border border-gray-300;
+
+    &.mat-menu-below {
+      @apply mt-1;
+    }
+
+    &.mat-menu-above {
+      @apply mb-1;
+    }
+  }
+
+  .mat-mdc-menu-content {
     @apply p-2;
   }
 
-  .mat-menu-item {
-    @apply flex items-center rounded text-sm font-medium h-10 pl-2 pr-6 transition duration-100 ease-out;
+  .mat-mdc-menu-item {
+    @apply flex items-center rounded text-sm font-medium min-h-[40px] my-1 pl-2 pr-6 transition duration-100 ease-out;
+
+    &:first-child {
+      @apply mt-0;
+    }
+
+    &:last-child {
+      @apply mb-0;
+    }
 
     &:hover:not([disabled]) {
-      @apply bg-primary/10;
+      @apply bg-primary-600/10;
 
       .mat-icon {
-        @apply text-primary;
+        @apply text-primary-600;
       }
     }
 
     .mat-icon {
-      @apply transition duration-100 ease-out;
-      font-size: 1.25rem;
-      height: 1.25rem;
-      width: 1.25rem;
+      @apply icon-sm transition duration-100 ease-out;
     }
   }
 
-  .mat-menu-item-submenu-trigger {
+  .mat-mdc-menu-item-submenu-trigger {
     @apply pr-12;
   }
 }
 
-.mat-menu-item .mat-icon-no-color,
-.mat-menu-submenu-icon {
-  color: currentColor;
+.mat-mdc-menu-item .mat-icon-no-color {
+  @apply text-current;
 }

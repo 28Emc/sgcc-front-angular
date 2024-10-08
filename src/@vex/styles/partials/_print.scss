@@ -1,14 +1,16 @@
 @media print {
-  html, body {
+  html,
+  body {
     height: auto !important;
     overflow: initial !important;
   }
 
-  .vex-toolbar, .sidenav {
+  .vex-toolbar,
+  .vex-sidenav {
     display: none !important;
   }
 
-  .content {
+  .vex-layout-content {
     margin-top: 0 !important;
   }
 
@@ -16,11 +18,7 @@
     overflow: visible !important;
   }
 
-  .mat-drawer-side {
-    border-right: none !important;
-  }
-
-  .sidenav-content {
+  .vex-layout-sidenav-content {
     margin-left: 0 !important;
     @apply bg-foreground;
   }

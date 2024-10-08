@@ -15,12 +15,15 @@
       "prefix": "vex",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/vex",
+            "outputPath": {
+              "base": "dist/vex"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -30,7 +33,7 @@
               "src/CHANGELOG.md",
               "src/.htaccess",
               {
-                "glob": "**/*.svg",
+                "glob": "two-tone/*.svg",
                 "input": "node_modules/@material-design-icons/svg",
                 "output": "assets/img/icons/material-design-icons/"
               }
@@ -51,35 +54,39 @@
               "angular-calendar/date-adapters/date-fns",
               "calendar-utils/date-adapters/date-fns",
               "@mattlewis92/dom-autoscroller",
-              "apexcharts"
+              "apexcharts",
+              "can-use-dom",
+              "lodash.debounce",
+              "lodash.memoize",
+              "lodash.throttle",
+              "luxon",
+              "quill",
+              "seedrandom"
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "3mb",
+                  "maximumWarning": "4mb",
                   "maximumError": "5mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
                 }
               ]
             }
@@ -88,18 +95,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "vex:build"
+            "buildTarget": "vex:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "vex:build:production"
+              "buildTarget": "vex:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "vex:build"
+            "buildTarget": "vex:build"
           }
         },
         "test": {
@@ -118,20 +125,11 @@
             ],
             "scripts": []
           }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "vex:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "vex:serve:production"
-            }
-          }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

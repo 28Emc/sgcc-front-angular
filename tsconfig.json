@@ -5,22 +5,26 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "noPropertyAccessFromIndexSignature": true,
     "sourceMap": true,
     "declaration": false,
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "module": "es2020",
     "lib": [
       "es2020",
       "dom"
     ],
-    // PARA LEER DATA EN FORMATO JSON
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "useDefineForClassFields": false,
+    "paths": {
+      "@vex/*": [
+        "./src/@vex/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

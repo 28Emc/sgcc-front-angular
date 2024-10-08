@@ -4,5 +4,5 @@
 }
 
 body .apexcharts-tooltip.light {
-  background: var(--background-foreground);
+  @apply bg-foreground;
 }

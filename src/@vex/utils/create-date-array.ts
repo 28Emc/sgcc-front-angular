@@ -9,4 +9,3 @@ export function createDateArray(length: number) {
 
   return dates.reverse();
 }
-

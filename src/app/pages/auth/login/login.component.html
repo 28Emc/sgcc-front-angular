@@ -1,53 +1,49 @@
-<div class="w-full h-full bg-pattern flex-col justify-center items-center">
-  <div @fadeInUp class="card overflow-hidden w-full max-w-xs">
-
-    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-
-    <div class="p-6 flex-col justify-center items-center">
+<div class="w-full h-full bg-pattern !bg-cover !bg-no-repeat flex flex-col items-center justify-center">
+  <div @fadeInUp class="card overflow-hidden w-full max-w-md shadow-2xl">
+    @if (loading) {
+    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    }
+    <div class="p-6 pb-0 flex flex-col items-center justify-center">
       <div class="fill-current text-center">
-        <img alt="img-login" class="w-16" src="assets/img/demo/logo.svg">
+        <img class="w-[250px]" src="assets/img/illustrations/logo.png" alt="login" />
       </div>
     </div>
 
-    <div class="text-center">
-      <h2 class="title">¡Bienvenido!</h2>
-      <h4 class="body-2 text-secondary">Inicia sesión con tus credenciales</h4>
+    <div class="text-center mt-4">
+      <h2 class="title m-0">Bienvenido</h2>
+      <h4 class="body-2 text-secondary m-0">
+        Inicia sesión con tus credenciales
+      </h4>
     </div>
 
-    <div [formGroup]="form" class="p-gutter flex-col gap-10">
-      <div class="flex-col">
-        <mat-form-field class="flex-grow">
-          <mat-label>Usuario</mat-label>
-          <input formControlName="usuario" matInput>
-          <mat-error>
-            <ng-container *ngFor="let error of errors(usuario)">
-              {{ usuarioFormErrors[error] }}<br>
-            </ng-container>
-          </mat-error>
+    <div [formGroup]="form" class="p-6 flex flex-col gap-4">
+      <div class="flex flex-col">
+        <mat-form-field class="flex-1">
+          <mat-label>Correo</mat-label>
+          <input formControlName="username" matInput required />
+          <mat-error *ngIf="form.controls.username.hasError('required')">Correo requerido</mat-error>
         </mat-form-field>
-        <mat-form-field class="flex-grow">
+        <mat-form-field class="flex-1">
           <mat-label>Contraseña</mat-label>
-          <input [type]="inputType" formControlName="password" matInput>
-          <button [disabled]="loading" (click)="verOcultarPassword()" mat-icon-button matSuffix
-            [matTooltip]="(inputType === 'text') ? 'Ocultar contraseña' : 'Ver contraseña'" type="button">
-            <mat-icon @fadeInUp *ngIf="visible" svgIcon="mat:visibility"></mat-icon>
-            <mat-icon @fadeInUp *ngIf="!visible" svgIcon="mat:visibility_off"></mat-icon>
+          <input [type]="inputType" formControlName="password" matInput required />
+          <button (click)="toggleVisibility()" mat-icon-button matIconSuffix [disabled]="loading"
+            [matTooltip]="visible ? 'Ocultar contraseña' : 'Ver contraseña'" type="button" aria-hidden="false">
+            <mat-icon *ngIf="!visible" svgIcon="mat:visibility"></mat-icon>
+            <mat-icon *ngIf="visible" svgIcon="mat:visibility_off"></mat-icon>
           </button>
-          <mat-error>
-            <ng-container *ngFor="let error of errors(password)">
-              {{ passwordFormErrors[error] }}<br>
-            </ng-container>
-          </mat-error>
+          <mat-error *ngIf="form.controls.password.hasError('required')">Contraseña requerida</mat-error>
         </mat-form-field>
       </div>
-      <button class="w-full" [disabled]="loading" (click)="iniciarSesion()" color="primary" mat-raised-button
-        type="button">
-        ENTRAR
-      </button>
-      <div class="flex-row justify-end items-center">
-        <a class="text-secondary caption cursor-pointer" (click)="restorePassword()">¿Olvidaste tu contraseña?</a>
+
+      <vex-action-button (actionBtnClicked)="login()" btnText="Iniciar sesión" [btnDisabled]="loading"
+        [btnLoading]="loading" btnClasses="!bg-teal-600 !text-white w-full"></vex-action-button>
+
+      <div class="flex flex-row items-center justify-end">
+        <a [routerLink]="['/change-password']"
+          class="flex flex-row items-center caption text-teal-600 hover:font-medium transition">
+          <span>Cambiar contraseña</span>
+        </a>
       </div>
     </div>
-
   </div>
 </div>
