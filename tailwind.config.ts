@@ -10,16 +10,30 @@ import addTypographyPlugin from '@tailwindcss/typography';
 export const themes: VexThemes = {
   default: {
     colors: {
+      /* TODO: AQUÍ SE DEFINE EL COLOR PRIMARIO DE LA APLICACIÓN */
       primary: {
+        /* TODO: TONALIDADES */
         defaults: {
-          lighter: '100',
-          default: '600',
+          lighter: '200',
+          default: '500',
           darker: '700'
         },
+        /* TODO: PALETA DE COLORES, EJM. BOTONES CON COLOR DE FONDO PRIMARIO (BASADO EN #97bec5) */
         palette: {
-          ...colors.indigo
+          //...colors.cyan
+          '50': '#ffffff',
+          '100': '#eaf2f3',
+          '200': '#d5e5e8',
+          '300': '#c1d8dc',
+          '400': '#accbd1',
+          '500': '#97bec5',
+          '600': '#79989e',
+          '700': '#5b7276',
+          '800': '#3c4c4f',
+          '900': '#1e2627'
         }
       },
+      /* TODO: PALETA DE COLORES COMPLEMENTARIOS, EJM. TEXTOS DE BOTONES CON COLOR PRIMARIO CON FONDO (BASADO EN #97bec5) */
       'on-primary': {
         palette: {
           '50': colors.black,
@@ -38,7 +52,7 @@ export const themes: VexThemes = {
         defaults: {
           lighter: '100',
           default: '500',
-          darker: '700'
+          darker: '600'
         },
         palette: {
           ...colors.amber
@@ -220,7 +234,8 @@ export default {
       sm: '600px',
       md: '960px',
       lg: '1280px',
-      xl: '1440px'
+      xl: '1440px',
+      '2xl': '2560px'
     },
     extend: {
       colors: {

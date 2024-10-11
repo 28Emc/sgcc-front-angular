@@ -25,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavigationItem } from '../../../core/navigation/navigation-item.interface';
 import { checkRouterChildsData } from '@vex/utils/check-router-childs-data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { VexColorScheme } from '@vex/config/vex-config.interface';
 
 @Component({
   selector: 'vex-toolbar',
@@ -72,6 +73,10 @@ export class ToolbarComponent implements OnInit {
     (config) => config.sidenav.title
   );
 
+  colorScheme$: Observable<VexColorScheme> = this.configService.config$.pipe(
+    map((config) => sessionStorage.getItem('colorScheme') as VexColorScheme ?? config.style.colorScheme)
+  );
+
   isDesktop$: Observable<boolean> = this.layoutService.isDesktop$;
   megaMenuOpen$: Observable<boolean> = of(false);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
@@ -82,7 +87,7 @@ export class ToolbarComponent implements OnInit {
     private readonly navigationService: NavigationService,
     private readonly popoverService: VexPopoverService,
     private readonly router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.router.events
@@ -97,6 +102,7 @@ export class ToolbarComponent implements OnInit {
           (data) => data.toolbarShadowEnabled ?? false
         );
       });
+      this.inizializeColorScheme();
   }
 
   openQuickpanel(): void {
@@ -136,5 +142,37 @@ export class ToolbarComponent implements OnInit {
 
   openSearch(): void {
     this.layoutService.openSearch();
+  }
+
+  inizializeColorScheme(): void {
+    const configScheme = sessionStorage.getItem('colorScheme') as VexColorScheme;
+    if (configScheme === VexColorScheme.DARK) {
+      this.enableDarkMode();
+    } else {
+      this.disableDarkMode();
+    }
+  }
+
+  isDark(colorScheme: VexColorScheme): boolean {
+    if (sessionStorage.getItem('colorScheme')) return sessionStorage.getItem('colorScheme') === VexColorScheme.DARK;
+    return colorScheme === VexColorScheme.DARK;
+  }
+
+  enableDarkMode(): void {
+    sessionStorage.setItem('colorScheme', VexColorScheme.DARK);
+    this.configService.updateConfig({
+      style: {
+        colorScheme: VexColorScheme.DARK
+      }
+    });
+  }
+
+  disableDarkMode(): void {
+    sessionStorage.setItem('colorScheme', VexColorScheme.LIGHT);
+    this.configService.updateConfig({
+      style: {
+        colorScheme: VexColorScheme.LIGHT
+      }
+    });
   }
 }

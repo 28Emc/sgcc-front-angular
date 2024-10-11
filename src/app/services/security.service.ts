@@ -4,9 +4,11 @@ import { NavigationLoaderService } from '../core/navigation/navigation-loader.se
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, map, catchError, delay, of } from 'rxjs';
 import { NavigationDropdown, NavigationItem, NavigationLink } from '../core/navigation/navigation-item.interface';
-import CryptoJS from 'crypto-js';
-import { IUser } from '../interfaces/IUser.interface';
+
+import { IUser, IUserLoginReq, IUserLogoutReq } from '../interfaces/IUser.interface';
 import { fakeUserLogin, OPTIONS } from '../utils/fake-data';
+import { encryptPassword } from '../utils/utilFunctions';
+import { VexColorScheme } from '@vex/config/vex-config.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +21,9 @@ export class SecurityService {
     private readonly http: HttpClient
   ) { }
 
-  // FIXME: INTEGRAR SERVICIO REAL
-  login(loginData: any): Observable<any> {
-    loginData.password = CryptoJS.SHA256(loginData.password).toString(CryptoJS.enc.Hex);
+  // TODO: INTEGRAR SERVICIO REAL
+  login(loginData: IUserLoginReq): Observable<any> {
+    loginData.password = encryptPassword(loginData.password);
     // return this.http.post<any>(`${this.baseURL}/auth/login`, loginData)
     return of(fakeUserLogin)
       .pipe(
@@ -58,7 +60,7 @@ export class SecurityService {
       );
   }
 
-  // FIXME: INTEGRAR SERVICIO REAL
+  // TODO: INTEGRAR SERVICIO REAL
   refreshToken(): Observable<any> {
     return this.http.post(`${this.baseURL}/auth/jwt/refresh`, null)
       .pipe(
@@ -71,9 +73,9 @@ export class SecurityService {
       );
   }
 
-  // FIXME: INTEGRAR SERVICIO REAL
-  signOut(logoutData: any): Observable<any> {
-    sessionStorage.clear();
+  // TODO: INTEGRAR SERVICIO REAL
+  signOut(logoutData: IUserLogoutReq): Observable<any> {
+    this.clearSessionStorageData();
     return of({
       message: 'User logged out successfully.',
       details: logoutData
@@ -101,6 +103,12 @@ export class SecurityService {
     // const opcionesSistema = this._reorderComponents(options);
     // this.navigationLoaderService.loadNavigation(opcionesSistema);
     // sessionStorage.setItem('opts', JSON.stringify(opcionesSistema));
+  }
+
+  clearSessionStorageData(): void {
+    const colorScheme: VexColorScheme = sessionStorage.getItem('colorScheme') as VexColorScheme ?? VexColorScheme.LIGHT;
+    sessionStorage.clear();
+    sessionStorage.setItem('colorScheme', colorScheme);
   }
 
   private _reorderComponents(optiones: any[]): any[] {

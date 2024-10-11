@@ -19,31 +19,26 @@
     <div [formGroup]="form" class="p-6 flex flex-col gap-4">
       <div class="flex flex-col">
         <mat-form-field class="flex-1">
-          <mat-label>Correo</mat-label>
-          <input formControlName="username" matInput required />
-          <mat-error *ngIf="form.controls.username.hasError('required')">Correo requerido</mat-error>
+          <mat-label>Usuario</mat-label>
+          <input formControlName="username" placeholder="Escribe tu usuario" matInput required />
+          @if (form.get('username')?.hasError('required')) {
+          <mat-error>Usuario requerido</mat-error>
+          }
         </mat-form-field>
         <mat-form-field class="flex-1">
           <mat-label>Contraseña</mat-label>
-          <input [type]="inputType" formControlName="password" matInput required />
+          <input [type]="inputType" formControlName="password" placeholder="Escribe tu contraseña" matInput required />
           <button (click)="toggleVisibility()" mat-icon-button matIconSuffix [disabled]="loading"
             [matTooltip]="visible ? 'Ocultar contraseña' : 'Ver contraseña'" type="button" aria-hidden="false">
-            <mat-icon *ngIf="!visible" svgIcon="mat:visibility"></mat-icon>
-            <mat-icon *ngIf="visible" svgIcon="mat:visibility_off"></mat-icon>
+            <mat-icon class="hover:text-primary-600 transition"
+              [svgIcon]="!visible ? 'mat:visibility' : 'mat:visibility_off'"></mat-icon>
           </button>
-          <mat-error *ngIf="form.controls.password.hasError('required')">Contraseña requerida</mat-error>
+          <mat-error *ngIf="form.get('password')?.hasError('required')">Contraseña requerida</mat-error>
         </mat-form-field>
       </div>
 
-      <vex-action-button (actionBtnClicked)="login()" btnText="Iniciar sesión" [btnDisabled]="loading"
-        [btnLoading]="loading" btnClasses="!bg-teal-600 !text-white w-full"></vex-action-button>
-
-      <div class="flex flex-row items-center justify-end">
-        <a [routerLink]="['/change-password']"
-          class="flex flex-row items-center caption text-teal-600 hover:font-medium transition">
-          <span>Cambiar contraseña</span>
-        </a>
-      </div>
+      <vex-action-button (actionBtnClicked)="login()" [btnDisabled]="loading || form.invalid" [btnLoading]="loading"
+        btnColor="primary" btnText="Iniciar sesión" btnClasses="w-full"></vex-action-button>
     </div>
   </div>
 </div>

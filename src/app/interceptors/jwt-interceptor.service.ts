@@ -39,7 +39,7 @@ export const JwtInterceptorService: HttpInterceptorFn = (
             catchError((refreshTokenError: HttpErrorResponse) => {
               hasTokenBeenUpdated = false;
               // If JWT cannot be updated, we redirect the user to "/login" page
-              sessionStorage.clear();
+              securityService.clearSessionStorageData();
               router.navigate(['/login']);
               return throwError(() => new Error(refreshTokenError.message));
             })

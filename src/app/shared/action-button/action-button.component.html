@@ -1,4 +1,4 @@
-<button mat-raised-button type="button"
+<button mat-raised-button type="button" [color]="btnColor ?? 'primary'"
   class="disabled:!bg-gray-200 disabled:!text-gray-400 transition !rounded-md" [class]="btnClasses"
   [disabled]="btnDisabled" (click)="onActionBtnClicked()" aria-hidden="false">
   <span>{{btnText}}</span>

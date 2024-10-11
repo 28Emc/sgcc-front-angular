@@ -18,7 +18,7 @@ export const appRoutes: VexRoutes = [
         path: 'dashboard',
         component: DashboardComponent
       },
-      /* FIXME: AGREGAR LAS DEMÁS RUTAS A LOS COMPONENTES INTERNOS DEL SISTEMA */
+      /* TODO: AGREGAR LAS DEMÁS RUTAS A LOS COMPONENTES INTERNOS DEL SISTEMA */
     ]
   },
   {

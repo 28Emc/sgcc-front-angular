@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 4205",
     "build:dev": "npm run build && cd dist/vex/browser && http-server -p 4205 -P http://localhost:4205? -o",
     "build": "ng build --configuration production",
     "test": "ng test",

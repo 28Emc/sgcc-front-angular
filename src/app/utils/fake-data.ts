@@ -114,5 +114,5 @@ export const OPTIONS: NavigationItem[] = [
       },
     ]
   }, */
-  // FIXME: AGREGAR MÁS OPCIONES DE SER NECESARIO
+  // TODO: AGREGAR MÁS OPCIONES DE SER NECESARIO
 ];

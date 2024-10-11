@@ -15,7 +15,9 @@
   in Chrome/Firefox DevTools
 */
 
-/* FIXME: CUSTOM MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
+// TODO: PRIMARY COLOR: #97bec5
+
+/* TODO: CUSTOM MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
 /* .mdc-text-field {
   .mat-mdc-form-field-flex {
     .mdc-notched-outline__leading {
@@ -35,7 +37,7 @@
   }
 } */
 
-/* FIXME: CUSTOM DISABLED MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
+/* TODO: CUSTOM DISABLED MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
 /* .mdc-text-field--disabled {
   .mat-mdc-form-field-flex {
     .mdc-notched-outline__leading {
@@ -76,7 +78,7 @@
   Uncomment the below code and adjust the values to fit your colors, the application will automatically adjust
  */
 html {
-  // --vex-color-primary: blue;
+  // --vex-color-primary: #0076b9;
   // --vex-color-primary-contrast: white;
 
   // --vex-color-accent: yellow;

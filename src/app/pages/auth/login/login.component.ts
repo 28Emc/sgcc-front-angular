@@ -1,17 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject
-} from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { fadeInUp400ms } from '@vex/animations/fade-in-up.animation';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SecurityService } from 'src/app/services/security.service';
@@ -24,7 +19,6 @@ import { NotificationService } from 'src/app/services/notification.service';
   selector: 'vex-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeInUp400ms],
   standalone: true,
   imports: [
@@ -32,6 +26,7 @@ import { NotificationService } from 'src/app/services/notification.service';
     MatFormFieldModule,
     MatInputModule,
     NgIf,
+    NgClass,
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
@@ -42,22 +37,21 @@ import { NotificationService } from 'src/app/services/notification.service';
   ]
 })
 export class LoginComponent {
-  form = this.fb.group({
+  form: FormGroup = this.fb.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
-  inputType = 'password';
-  visible = false;
+  inputType: 'text' | 'password' = 'password';
+  visible: boolean = false;
   loading: boolean = false;
-  securityService = inject(SecurityService);
-  notificationService = inject(NotificationService);
+  securityService: SecurityService = inject(SecurityService);
+  notificationService: NotificationService = inject(NotificationService);
 
   constructor(
     private readonly router: Router,
-    private readonly fb: FormBuilder,
-    private readonly cd: ChangeDetectorRef
+    private readonly fb: FormBuilder
   ) {
-    sessionStorage.clear();
+    this.securityService.clearSessionStorageData();
   }
 
   login(): void {
@@ -76,6 +70,7 @@ export class LoginComponent {
       error: (error: HttpErrorResponse) => {
         this.loading = false;
         this.form.enable();
+
         this.notificationService.showSnackbar((error as Error).message || 'Error de inicio de sesión', 'ERROR');
       },
       complete: () => {
@@ -89,11 +84,9 @@ export class LoginComponent {
     if (this.visible) {
       this.inputType = 'password';
       this.visible = false;
-      this.cd.markForCheck();
     } else {
       this.inputType = 'text';
       this.visible = true;
-      this.cd.markForCheck();
     }
   }
 }

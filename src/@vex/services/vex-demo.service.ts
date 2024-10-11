@@ -45,7 +45,6 @@ export class VexDemoService {
           });
         }
 
-        // TODO: Adjust primaryColor queryParam and see where it was used?
         const theme: VexTheme | null = route.queryParamMap.get(
           'theme'
         ) as VexTheme | null;

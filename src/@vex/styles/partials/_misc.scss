@@ -43,10 +43,21 @@ body.is-blink {
 .container {
   @apply px-6;
 
-  @screen lg {
+  @screen xl {
     margin-left: auto;
     margin-right: auto;
-    max-width: theme("screens.lg");
+    max-width: theme("screens.2xl");
+    width: 100%;
+  }
+}
+
+.base-container {
+  @apply p-6;
+
+  @screen xl {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: theme("screens.2xl");
     width: 100%;
   }
 }

@@ -32,7 +32,7 @@ const baseConfig: VexConfig = {
   boxed: false,
   sidenav: {
     title: 'VEX',
-    imageUrl: 'assets/img/logo/logo.svg',
+    imageUrl: 'assets/img/illustrations/logo.png',
     showCollapsePin: true,
     user: {
       visible: true
@@ -52,13 +52,14 @@ const baseConfig: VexConfig = {
     position: 'below-toolbar'
   },
   footer: {
-    visible: true,
+    visible: false,
     fixed: true
   }
 };
 
 export const vexConfigs: VexConfigs = {
   apollo: baseConfig,
+  // TODO: CONFIGURACIÓN ACTUAL
   poseidon: mergeDeep(deepClone(baseConfig), {
     id: VexConfigName.poseidon,
     name: 'Poseidon',
@@ -69,7 +70,7 @@ export const vexConfigs: VexConfigs = {
         visible: true
       },
       search: {
-        visible: true
+        visible: false
       }
     },
     toolbar: {

@@ -28,7 +28,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideRouter(
       appRoutes,
-      // TODO: Add preloading withPreloading(),
       withInMemoryScrolling({
         anchorScrolling: 'enabled',
         scrollPositionRestoration: 'enabled'
@@ -78,7 +77,7 @@ export const appConfig: ApplicationConfig = {
     provideIcons(),
     provideLuxon(),
     provideHttpClient(withInterceptors([
-      // JwtInterceptorService, // FIXME: HABILITAR CUANDO SE IMPLEMENTE EL INICIO DE SESIÓN CON BACKEND
+      // JwtInterceptorService, // TODO: HABILITAR CUANDO SE IMPLEMENTE EL INICIO DE SESIÓN CON BACKEND
       AuthInterceptorService
     ])),
     { provide: MatPaginatorIntl, useClass: SpanishPaginatorIntl },

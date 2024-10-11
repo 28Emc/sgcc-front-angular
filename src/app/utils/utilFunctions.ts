@@ -1,5 +1,10 @@
 
+import CryptoJS from 'crypto-js';
 import { DateTime } from "luxon";
+
+export function encryptPassword(passwordText: string): string {
+  return CryptoJS.SHA256(passwordText).toString(CryptoJS.enc.Hex);
+}
 
 export function extractCommaFromNumber(number: any, decimals: number = 4): number {
   try {
