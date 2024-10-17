@@ -92,7 +92,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.customDialogConfig = {
       disableClose: true,
-      panelClass: ['sm:w-3/5', 'w-full']
+      panelClass: ['lg:w-[40%]', 'w-full']
     };
     this.fetchUsers();
     this.searchCtrl.valueChanges

@@ -15,95 +15,6 @@
   in Chrome/Firefox DevTools
 */
 
-// TODO: PRIMARY COLOR: #97bec5
-
-/* CUSTOM MAT-SNACKBAR STYLES */
-.snackbar-success {
-  --mdc-snackbar-container-color: rgba(13, 148, 136, 0.9) !important;
-  --mat-snack-bar-button-color: white;
-  --mdc-snackbar-supporting-text-color: white;
-}
-
-.snackbar-info {
-  --mdc-snackbar-container-color: rgba(0, 132, 165, 0.9) !important;
-  --mat-snack-bar-button-color: white;
-  --mdc-snackbar-supporting-text-color: white;
-}
-
-.snackbar-warning {
-  --mdc-snackbar-container-color: rgba(234, 145, 12, 0.9) !important;
-  --mat-snack-bar-button-color: white;
-  --mdc-snackbar-supporting-text-color: white;
-}
-
-.snackbar-error {
-  --mdc-snackbar-container-color: rgba(220, 38, 38, 0.9) !important;
-  --mat-snack-bar-button-color: white;
-  --mdc-snackbar-supporting-text-color: white;
-}
-
-input::-ms-reveal,
-input::-ms-clear {
-  display: none;
-}
-
-/* TODO: CUSTOM MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
-/* .mdc-text-field {
-  .mat-mdc-form-field-flex {
-    .mdc-notched-outline__leading {
-      border-width: 1.8px !important;
-      background: transparent !important;
-    }
-
-    .mdc-notched-outline__notch {
-      border-width: 1.8px !important;
-      background: transparent !important;
-    }
-
-    .mdc-notched-outline__trailing {
-      border-width: 1.8px !important;
-      background: transparent !important;
-    }
-  }
-} */
-
-/* TODO: CUSTOM DISABLED MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
-/* .mdc-text-field--disabled {
-  .mat-mdc-form-field-flex {
-    .mdc-notched-outline__leading {
-      border-width: 1px !important;
-      border-color: #201a1b25 !important;
-      background: #ebebeb5e !important;
-    }
-
-    .mdc-notched-outline__notch {
-      border-width: 1px !important;
-      border-color: #201a1b25 !important;
-      border-left: transparent !important;
-      background: #ebebeb5e !important;
-    }
-
-    .mdc-notched-outline__trailing {
-      border-width: 1px !important;
-      border-color: #201a1b25 !important;
-      background: #ebebeb5e !important;
-    }
-  }
-
-  .mdc-floating-label {
-    color: #201a1bb6 !important;
-    font-weight: 500 !important;
-  }
-
-  .mat-mdc-form-field-flex .mat-mdc-form-field-infix .mdc-text-field__input:not(.input-green, .input-red) {
-    color: #080707 !important;
-  }
-
-  .mat-mdc-select {
-    color: #080707 !important;
-  }
-} */
-
 /**
   Uncomment the below code and adjust the values to fit your colors, the application will automatically adjust
  */
@@ -116,4 +27,111 @@ html {
 
   // --vex-color-warn: yellow;
   // --vex-color-warn-contrast: black;
+
+  // TODO: PRIMARY COLOR: #97bec5
+
+  /* CUSTOM MAT-SNACKBAR STYLES */
+  .snackbar-success {
+    --mdc-snackbar-container-color: rgba(13, 148, 136, 0.9) !important;
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+
+  .snackbar-info {
+    --mdc-snackbar-container-color: rgba(0, 132, 165, 0.9) !important;
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+
+  .snackbar-warning {
+    --mdc-snackbar-container-color: rgba(234, 145, 12, 0.9) !important;
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+
+  .snackbar-error {
+    --mdc-snackbar-container-color: rgba(220, 38, 38, 0.9) !important;
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+
+  /* TODO: CUSTOM DISABLED MAT-FORMFIELD OUTLINED STYLES, UNCOMMENT TO APPLY */
+  body.light {
+    .mdc-text-field--disabled {
+      .mat-mdc-form-field-flex {
+        .mdc-notched-outline__leading {
+          border-width: 1px !important;
+          border-color: #201a1b25 !important;
+          background: #ebebeb5e !important;
+        }
+
+        .mdc-notched-outline__notch {
+          border-width: 1px !important;
+          border-color: #201a1b25 !important;
+          border-left: transparent !important;
+          background: #ebebeb5e !important;
+        }
+
+        .mdc-notched-outline__trailing {
+          border-width: 1px !important;
+          border-color: #201a1b25 !important;
+          background: #ebebeb5e !important;
+        }
+      }
+
+      .mdc-floating-label {
+        color: #201a1bb6 !important;
+      }
+
+      .mat-mdc-form-field-flex .mat-mdc-form-field-infix .mdc-text-field__input {
+        color: #080707 !important;
+      }
+
+      .mat-mdc-select {
+        color: #080707 !important;
+      }
+    }
+  }
+
+  body.dark {
+    .mdc-text-field--disabled {
+      .mat-mdc-form-field-flex {
+        .mdc-notched-outline__leading {
+          border-width: 1px !important;
+          border-color: #ebebeb5e !important;
+          background: #201a1b73 !important;
+        }
+
+        .mdc-notched-outline__notch {
+          border-width: 1px !important;
+          border-color: #ebebeb5e !important;
+          border-left: transparent !important;
+          background: #201a1b73 !important;
+        }
+
+        .mdc-notched-outline__trailing {
+          border-width: 1px !important;
+          border-color: #ebebeb5e !important;
+          background: #201a1b73 !important;
+        }
+      }
+
+      .mdc-floating-label {
+        color: #E2E3E5 !important;
+      }
+
+      .mat-mdc-form-field-flex .mat-mdc-form-field-infix .mdc-text-field__input {
+        color: #E2E3E5 !important;
+      }
+
+      .mat-mdc-select {
+        color: #E2E3E5 !important;
+      }
+    }
+  }
 }

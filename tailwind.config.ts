@@ -14,33 +14,33 @@ export const themes: VexThemes = {
       primary: {
         /* TODO: TONALIDADES */
         defaults: {
-          lighter: '200',
-          default: '500',
-          darker: '700'
+          lighter: '100',
+          default: '300',
+          darker: '800'
         },
-        /* TODO: PALETA DE COLORES, EJM. BOTONES CON COLOR DE FONDO PRIMARIO (BASADO EN #97bec5) */
+        /* TODO: PALETA DE COLORES, EJM. BOTONES CON COLOR DE FONDO PRIMARIO (BASADO EN #65a0ab) */
         palette: {
           //...colors.cyan
-          '50': '#ffffff',
-          '100': '#eaf2f3',
-          '200': '#d5e5e8',
-          '300': '#c1d8dc',
-          '400': '#accbd1',
-          '500': '#97bec5',
-          '600': '#79989e',
-          '700': '#5b7276',
-          '800': '#3c4c4f',
-          '900': '#1e2627'
+          '50': '#8fe1f0',
+          '100': '#81cbd9',
+          '200': '#73b6c2',
+          '300': '#65a0ab',
+          '400': '#578b94',
+          '500': '#4a757d',
+          '600': '#3c6066',
+          '700': '#2e4a4f',
+          '800': '#203538',
+          '900': '#121f21'
         }
       },
-      /* TODO: PALETA DE COLORES COMPLEMENTARIOS, EJM. TEXTOS DE BOTONES CON COLOR PRIMARIO CON FONDO (BASADO EN #97bec5) */
+      /* TODO: PALETA DE COLORES DE CONTRASTE CON COLOR PRIMARIO (BASADO EN #65a0ab) */
       'on-primary': {
         palette: {
           '50': colors.black,
           '100': colors.black,
           '200': colors.black,
-          '300': colors.black,
-          '400': colors.black,
+          '300': colors.white,
+          '400': colors.white,
           '500': colors.white,
           '600': colors.white,
           '700': colors.white,

@@ -59,20 +59,15 @@ export class LoginComponent {
     this.form.disable();
     this.securityService.login(this.form.getRawValue()).subscribe({
       next: payload => {
-        this.loading = false;
-        this.form.enable();
-
         this.securityService.storeTokenData(payload.data.accessToken, payload.data.refreshToken);
         this.securityService.storeUserData(payload.data.user);
         this.securityService.storeSystemOptions(payload.data.options);
         this.router.navigate(['/dashboard']);
       },
       error: (error: HttpErrorResponse) => {
-        console.log('error', error)
+        this.notificationService.showSnackbar(error.message, 'ERROR');
         this.loading = false;
         this.form.enable();
-
-        this.notificationService.showSnackbar(error.message, 'ERROR');
       },
       complete: () => {
         this.loading = false;

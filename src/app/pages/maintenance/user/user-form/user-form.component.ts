@@ -52,6 +52,7 @@ export class UserFormComponent {
     createdAt: [{ value: '', disabled: true }],
     // state: [{ value: '', disabled: true }]
   });
+  resetForm = this.form.getRawValue();
   inputType: 'text' | 'password' = 'password';
   mode: 'create' | 'update' = 'create';
   titulo: string = 'Nuevo usuario';
@@ -71,20 +72,23 @@ export class UserFormComponent {
   ) { }
 
   ngOnInit() {
+    this.form.reset(this, this.resetForm);
+
     if (this.data?.user) {
       this.mode = 'update';
       this.titulo = 'Actualizar datos de usuario';
+      this.form.removeControl('password');
       this.form.patchValue({
         id: this.data.user.id,
         alias: this.data.user.alias,
         username: this.data.user.username,
-        password: this.data.user.password,
         role: this.data.user.role,
         createdAt: DateTime.fromFormat(this.data.user.createdAt, 'yyyy-MM-dd HH:mm:ss').toString(),
         // state: this.data.user.status === true ? 'ACTIVO' : 'INACTIVO'
       });
     } else {
       this.data.user = {} as IUser;
+      this.form.removeControl('id');
       this.form.patchValue({
         role: USER_ROLE
       });

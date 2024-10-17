@@ -12,58 +12,63 @@
   <mat-divider class="text-border"></mat-divider>
 
   <mat-dialog-content class="flex flex-col">
-    <div class="flex flex-col md:flex-row gap-2">
-      <mat-form-field class="flex-auto">
+    <div class="grid md:grid-cols-2 grid-cols-1 md:gap-x-3 gap-x-0">
+      <mat-form-field class="sm:col-span-1 col-span-full">
         <mat-label>Rol</mat-label>
-        <input class="!uppercase" formControlName="role" matInput />
+        <input autocomplete="new-password" aria-autocomplete="none" class="!uppercase" formControlName="role"
+          matInput />
+        <!-- <mat-icon matIconPrefix svgIcon="mat:business"></mat-icon> -->
       </mat-form-field>
 
-      <mat-form-field class="sm:basis-1/2 basis-full">
+      <mat-form-field class="sm:col-span-1 col-span-full">
         <mat-label>Alias (opcional)</mat-label>
-        <input formControlName="alias" matInput placeholder="Escribe un alias" />
+        <input autocomplete="new-password" aria-autocomplete="none" formControlName="alias" matInput
+          placeholder="Escribe un alias" />
         <!-- <mat-icon matIconPrefix svgIcon="mat:business"></mat-icon> -->
       </mat-form-field>
-    </div>
 
-    <div class="flex flex-col md:flex-row gap-2">
-      <mat-form-field class="sm:basis-1/2 basis-full">
+      <mat-form-field class="sm:col-span-1 col-span-full">
         <mat-label>Usuario</mat-label>
-        <input formControlName="username" matInput type="text" placeholder="Escribe un nombre de usuario" />
+        <input autocomplete="new-password" aria-autocomplete="none" formControlName="username" matInput type="text"
+          placeholder="Escribe un nombre de usuario" />
         <!-- <mat-icon matIconPrefix svgIcon="mat:business"></mat-icon> -->
       </mat-form-field>
 
-      <mat-form-field class="sm:basis-1/2 basis-full">
+      @if (data.user?.id) {
+      <mat-form-field class="sm:col-span-1 col-span-full">
+        <mat-label>Fecha Registro</mat-label>
+        <input autocomplete="new-password" aria-autocomplete="none" [matDatepicker]="datepickerFC" matInput
+          placeholder="dd/MM/yyyy" formControlName="createdAt" />
+        <mat-datepicker-toggle [for]="datepickerFC" matIconSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datepickerFC></mat-datepicker>
+      </mat-form-field>
+      <!-- <mat-form-field class="sm:col-span-1 col-span-full">
+          <mat-label>Estado</mat-label>
+          <input autocomplete="new-password" aria-autocomplete="none" class="uppercase" formControlName="status" matInput />
+        </mat-form-field> -->
+      } @else {
+      <mat-form-field class="sm:col-span-1 col-span-full">
         <mat-label>Contraseña</mat-label>
-        <input [type]="inputType" formControlName="password" placeholder="Escribe una contraseña" matInput required />
+        <input autocomplete="new-password" aria-autocomplete="none" [type]="inputType" formControlName="password"
+          placeholder="Escribe una contraseña" matInput required />
         <button (click)="toggleVisibility()" mat-icon-button matIconSuffix [disabled]="loading"
           [matTooltip]="visible ? 'Ocultar contraseña' : 'Ver contraseña'" type="button" aria-hidden="false">
           <mat-icon class="hover:text-primary-600 transition"
             [svgIcon]="!visible ? 'mat:visibility' : 'mat:visibility_off'"></mat-icon>
         </button>
+        <!-- <mat-icon matIconPrefix svgIcon="mat:business"></mat-icon> -->
       </mat-form-field>
+      }
     </div>
 
-    @if (data && data.user?.id) {
-    <div class="flex flex-col md:flex-row gap-2">
-      <mat-form-field class="md:basis-1/2 basis-full">
-        <mat-label>Fecha Registro</mat-label>
-        <input [matDatepicker]="datepickerFC" matInput placeholder="dd/MM/yyyy" formControlName="createdAt" />
-        <mat-datepicker-toggle [for]="datepickerFC" matIconSuffix></mat-datepicker-toggle>
-        <mat-datepicker #datepickerFC></mat-datepicker>
-      </mat-form-field>
-      <!-- <mat-form-field class="md:basis-1/2 basis-full">
-        <mat-label>Estado</mat-label>
-        <input class="uppercase" formControlName="status" matInput />
-      </mat-form-field> -->
-    </div>
-    }
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <div class="flex sm:flex-row flex-col sm:items-center justify-between gap-2 w-full">
-      <vex-cancel-button mat-dialog-close btnText="Cancelar"></vex-cancel-button>
+    <div class="flex sm:flex-row flex-col sm:items-center justify-between gap-2 w-full px-3">
+      <vex-cancel-button mat-dialog-close btnText="Cancelar" btnClasses="w-full sm:w-auto"></vex-cancel-button>
       <vex-action-button (actionBtnClicked)="saveData()" [btnText]="isCreateMode() ? 'Registrar' : 'Guardar cambios'"
-        [btnDisabled]="loading || form.invalid" [btnLoading]="loading" btnColor="primary"></vex-action-button>
+        [btnDisabled]="loading || form.invalid" [btnLoading]="loading" btnColor="primary"
+        btnClasses="w-full sm:w-auto"></vex-action-button>
     </div>
   </mat-dialog-actions>
 </form>
