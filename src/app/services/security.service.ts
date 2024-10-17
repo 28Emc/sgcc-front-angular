@@ -2,13 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { NavigationLoaderService } from '../core/navigation/navigation-loader.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, map, catchError, delay, of } from 'rxjs';
+import { Observable, map, catchError, of, tap, shareReplay, BehaviorSubject } from 'rxjs';
 import { NavigationDropdown, NavigationItem, NavigationLink } from '../core/navigation/navigation-item.interface';
 
-import { IUser, IUserLoginReq, IUserLogoutReq } from '../interfaces/IUser.interface';
-import { fakeUserLogin, OPTIONS } from '../utils/fake-data';
-import { encryptPassword } from '../utils/utilFunctions';
+import { IUser, IUserLoginReq, IUserLoginRes, IUserLogoutReq } from '../interfaces/IUser.interface';
+import { OPTIONS } from '../utils/fake-data';
 import { VexColorScheme } from '@vex/config/vex-config.interface';
+import { IAPIResponsePOST } from '../interfaces/IApiResponse.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -17,31 +17,27 @@ export class SecurityService {
   readonly baseURL: string = environment.baseURL;
   navigationLoaderService = inject(NavigationLoaderService);
 
+  refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+  accessTokenStr = '';
+  refreshTokenStr = '';
+  isRefreshingToken = false;
+
   constructor(
     private readonly http: HttpClient
   ) { }
 
-  // TODO: INTEGRAR SERVICIO REAL
-  login(loginData: IUserLoginReq): Observable<any> {
-    loginData.password = encryptPassword(loginData.password);
-    // return this.http.post<any>(`${this.baseURL}/auth/login`, loginData)
-    return of(fakeUserLogin)
+  login(loginData: IUserLoginReq): Observable<IAPIResponsePOST<IUserLoginRes>> {
+    return this.http.post<IAPIResponsePOST<IUserLoginRes>>(`${this.baseURL}/auth/login`, loginData)
       .pipe(
-        delay(1000),
-        map((loginPayload: IUser) => {
+        map((loginPayload: IAPIResponsePOST<IUserLoginRes>) => {
           return {
-            status: 'OK',
             message: 'Inicio de sesión correcto.',
             data: {
+              ...loginPayload.data,
               user: {
-                id: loginPayload.id,
-                alias: loginPayload.alias,
-                username: loginPayload.username,
-                rol: loginPayload.rol,
-                avatar: loginPayload.avatar ?? 'https://picsum.photos/200.webp'
+                ...loginPayload.data.user,
+                avatar: loginPayload.data.user.avatar ?? 'https://picsum.photos/200.webp'
               } as IUser,
-              token: loginPayload.token ?? 'ec80f5690620d23ab137502f24165195009d9466',
-              refresh_token: loginPayload.refresh_token ?? 'ec80f5690620d23ab137502f24165195009d9466',
               options: OPTIONS
             }
           }
@@ -49,37 +45,53 @@ export class SecurityService {
         catchError((error: HttpErrorResponse) => {
           let messageError = '';
           if (error.error instanceof ProgressEvent) {
-            messageError = 'Servicio de inicio de sesión no disponible';
-          } else if ('status' in error.error && ['NOT_FOUND', 'BAD_REQUEST'].includes(error.error.status)) {
-            messageError = error.error.message;
+            messageError = 'Servicio de inicio de sesión no disponible.';
           } else {
-            messageError = 'Error de sistema';
+            messageError = 'Error de sistema. Inténtelo más tarde.';
           }
           throw new Error(messageError);
         })
       );
   }
 
-  // TODO: INTEGRAR SERVICIO REAL
-  refreshToken(): Observable<any> {
-    return this.http.post(`${this.baseURL}/auth/jwt/refresh`, null)
-      .pipe(
-        map((refreshJwtPayload: any) => {
-          return {
-            message: 'JWT has been refreshed successfully.',
-            details: refreshJwtPayload
-          }
-        })
-      );
+  getAccessToken(): string {
+    return this.accessTokenStr || (sessionStorage.getItem('tkn') ?? '');
   }
 
-  // TODO: INTEGRAR SERVICIO REAL
+  getRefreshToken(): string {
+    return this.refreshTokenStr || (sessionStorage.getItem('r-tkn') ?? '');
+  }
+
+  refreshToken(): Observable<any> {
+    if (!this.isRefreshingToken) {
+      this.isRefreshingToken = true;
+      return this.http.post<IAPIResponsePOST<any>>(`${this.baseURL}/auth/refresh-token`, { refreshToken: this.getRefreshToken() })
+        .pipe(
+          tap((refreshJwtPayload: IAPIResponsePOST<any>) => {
+            this.storeTokenData(refreshJwtPayload.data.accessToken, refreshJwtPayload.data.refreshToken);
+            this.refreshTokenSubject.next(refreshJwtPayload.data.accessToken);
+            this.isRefreshingToken = false;
+          }),
+          catchError(_err => {
+            this.isRefreshingToken = false;
+            this.refreshTokenSubject.next(null);
+            return of(null);
+          }),
+          shareReplay(1)
+        );
+    } else {
+      return this.refreshTokenSubject.asObservable();
+    }
+  }
+
   signOut(logoutData: IUserLogoutReq): Observable<any> {
     this.clearSessionStorageData();
+    this.accessTokenStr = '';
+    this.refreshTokenStr = '';
     return of({
-      message: 'User logged out successfully.',
+      message: 'Cierre de sesión correcto.',
       details: logoutData
-    }).pipe(delay(500));
+    });
   }
 
   isUserLoggedIn(): Observable<string | null> {
@@ -91,8 +103,12 @@ export class SecurityService {
   }
 
   storeTokenData(token: string, refreshToken?: string): void {
+    this.accessTokenStr = token;
     sessionStorage.setItem('tkn', token);
-    if (refreshToken) sessionStorage.setItem('r-tkn', refreshToken);
+    if (refreshToken) {
+      this.refreshTokenStr = refreshToken;
+      sessionStorage.setItem('r-tkn', refreshToken);
+    }
   }
 
   storeSystemOptions(options: any[]): void {

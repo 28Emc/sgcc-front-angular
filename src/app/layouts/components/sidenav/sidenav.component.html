@@ -47,7 +47,7 @@
         [src]="user.avatar || '../../../../assets/img/avatars/1.jpg'" />
       <div class="vex-sidenav-user__content flex-auto">
         <div class="vex-sidenav-user__title">{{ user.alias || user.username || 'Usuario no definido' }}</div>
-        <div class="vex-sidenav-user__subtitle">{{ user.rol || 'Rol no definido' }}</div>
+        <div class="vex-sidenav-user__subtitle">{{ (user.role || 'Rol no definido') | uppercase }}</div>
       </div>
       <mat-icon class="vex-sidenav-user__dropdown-icon flex-none" svgIcon="mat:arrow_drop_down"></mat-icon>
     </div>

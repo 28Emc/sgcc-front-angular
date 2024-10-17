@@ -62,16 +62,17 @@ export class LoginComponent {
         this.loading = false;
         this.form.enable();
 
-        this.securityService.storeTokenData(payload.data['token'], payload.data['refresh_token']);
-        this.securityService.storeUserData(payload.data['user']);
-        this.securityService.storeSystemOptions(payload.data['options']);
+        this.securityService.storeTokenData(payload.data.accessToken, payload.data.refreshToken);
+        this.securityService.storeUserData(payload.data.user);
+        this.securityService.storeSystemOptions(payload.data.options);
         this.router.navigate(['/dashboard']);
       },
       error: (error: HttpErrorResponse) => {
+        console.log('error', error)
         this.loading = false;
         this.form.enable();
 
-        this.notificationService.showSnackbar((error as Error).message || 'Error de inicio de sesión', 'ERROR');
+        this.notificationService.showSnackbar(error.message, 'ERROR');
       },
       complete: () => {
         this.loading = false;

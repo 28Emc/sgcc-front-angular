@@ -1,6 +1,7 @@
 
 import CryptoJS from 'crypto-js';
 import { DateTime } from "luxon";
+import { BADGE_STYLES, DEFAULT_BADGE_CLASSES } from './constants';
 
 export function encryptPassword(passwordText: string): string {
   return CryptoJS.SHA256(passwordText).toString(CryptoJS.enc.Hex);
@@ -29,4 +30,8 @@ export function arrayToMap(array: any[], key: string, value: string): Map<any, a
     acc.set(obj[key], obj[value]);
     return acc;
   }, new Map());
+}
+
+export function getBadgeStyles(key: string): any {
+  return BADGE_STYLES.get(key) ?? DEFAULT_BADGE_CLASSES;
 }

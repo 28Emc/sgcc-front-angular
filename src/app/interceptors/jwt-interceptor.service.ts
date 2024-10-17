@@ -2,60 +2,52 @@ import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpS
 import { SecurityService } from '../services/security.service';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap, take, throwError } from 'rxjs';
+import { IAPIResponsePOST } from '../interfaces/IApiResponse.interface';
 
 export const JwtInterceptorService: HttpInterceptorFn = (
   req: HttpRequest<any>,
   next: HttpHandlerFn
 ) => {
+  if (urlIsInWhitelist(req)) return next(req);
+
   const securityService = inject(SecurityService);
   const router = inject(Router);
-  let hasTokenBeenUpdated: boolean = false;
-  let accessTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  let request = req;
-  // Get current JWT
-  const myRawToken = sessionStorage.getItem('tkn');
-  const helper = new JwtHelperService();
-  const isExpired = helper.isTokenExpired(myRawToken);
+  let authReq = addTokenHeader(req, securityService.getAccessToken());
 
-  return next(request).pipe(
-    catchError((interceptorError: HttpErrorResponse) => {
-      // Check if JWT is already expired
-      if (interceptorError instanceof HttpErrorResponse && interceptorError.status === HttpStatusCode.Unauthorized && isExpired) {
-        // If JWT is already expired and has not yet been updated, the incerceptor will call "refresh token" endpoint, only for the 1st request
-        // (since the interceptor is triggered for each request done), then refresh token is retrieved and stored
-        if (!hasTokenBeenUpdated) {
-          hasTokenBeenUpdated = true;
-          accessTokenSubject.next('');
-          return securityService.refreshToken().pipe(
-            switchMap((refreshJwtPayload: any) => {
-              hasTokenBeenUpdated = false;
-              accessTokenSubject.next(refreshJwtPayload.details['token']);
-              sessionStorage.setItem('tkn', refreshJwtPayload.details['token']);
-              if (refreshJwtPayload.details['refresh_token']) sessionStorage.setItem('r-tkn', refreshJwtPayload.details['refresh-token']);
-              return next(request);
-            }),
-            catchError((refreshTokenError: HttpErrorResponse) => {
-              hasTokenBeenUpdated = false;
-              // If JWT cannot be updated, we redirect the user to "/login" page
-              securityService.clearSessionStorageData();
-              router.navigate(['/login']);
-              return throwError(() => new Error(refreshTokenError.message));
-            })
-          );
-        } else {
-          // If JWT has been updated before, we retrieve it from "accessTokenSubject"
-          return accessTokenSubject.pipe(
-            filter(accessToken => accessToken !== null),
-            take(1),
-            switchMap(token => {
-              sessionStorage.setItem('tkn', token);
-              return next(request);
-            }));
-        }
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if ([HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(error.status)) {
+        return securityService.refreshToken().pipe(
+          map((tokenData: IAPIResponsePOST<any>) => tokenData.data.accessToken),
+          filter((token: string) => token !== null),
+          take(1),
+          switchMap((newToken: string) => {
+            authReq = addTokenHeader(req, newToken);
+            return next(authReq);
+          }),
+          catchError(err => {
+            securityService.clearSessionStorageData();
+            router.navigate(['/login']);
+            return throwError(() => err);
+          })
+        );
+      } else {
+        return throwError(() => error);
       }
-      return throwError(() => interceptorError);
     })
   );
+}
+
+function addTokenHeader(req: HttpRequest<any>, token: string | null): HttpRequest<any> {
+  if (token) {
+    return req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`),
+    });
+  }
+  return req;
+}
+
+function urlIsInWhitelist(req: HttpRequest<any>): boolean {
+  return req.url.search(/login/gi) !== -1 || req.url.search(/refresh-token/gi) !== -1;
 }

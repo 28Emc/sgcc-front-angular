@@ -1,13 +1,11 @@
 import { authGuard } from './guards/auth.guard';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { VexRoutes } from '@vex/interfaces/vex-route.interface';
-import { LoginComponent } from './pages/auth/login/login.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 export const appRoutes: VexRoutes = [
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: '',
@@ -16,9 +14,39 @@ export const appRoutes: VexRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent
+        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
-      /* TODO: AGREGAR LAS DEMÁS RUTAS A LOS COMPONENTES INTERNOS DEL SISTEMA */
+      {
+        path: 'maintenance',
+        children: [
+          {
+            path: 'users',
+            loadComponent: () => import('./pages/maintenance/user/user.component').then(m => m.UserComponent)
+          },
+          {
+            path: 'areas',
+            loadComponent: () => import('./pages/maintenance/area/area.component').then(m => m.AreaComponent)
+          },
+          {
+            path: 'services',
+            loadComponent: () => import('./pages/maintenance/service/service.component').then(m => m.ServiceComponent)
+          }
+        ]
+      },
+      {
+        path: 'management',
+        children: [
+          {
+            path: 'consumptions',
+            loadComponent: () => import('./pages/management/consumption/consumption.component').then(m => m.ConsumptionComponent)
+          }
+        ]
+      },
+      {
+        path: '**',
+        redirectTo: '/dashboard',
+        pathMatch: 'full'
+      }
     ]
   },
   {

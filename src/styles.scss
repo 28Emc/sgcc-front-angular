@@ -17,6 +17,36 @@
 
 // TODO: PRIMARY COLOR: #97bec5
 
+/* CUSTOM MAT-SNACKBAR STYLES */
+.snackbar-success {
+  --mdc-snackbar-container-color: rgba(13, 148, 136, 0.9) !important;
+  --mat-snack-bar-button-color: white;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.snackbar-info {
+  --mdc-snackbar-container-color: rgba(0, 132, 165, 0.9) !important;
+  --mat-snack-bar-button-color: white;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.snackbar-warning {
+  --mdc-snackbar-container-color: rgba(234, 145, 12, 0.9) !important;
+  --mat-snack-bar-button-color: white;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.snackbar-error {
+  --mdc-snackbar-container-color: rgba(220, 38, 38, 0.9) !important;
+  --mat-snack-bar-button-color: white;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 /* TODO: CUSTOM MAT-FORMFIELD STYLES, UNCOMMENT TO APPLY */
 /* .mdc-text-field {
   .mat-mdc-form-field-flex {

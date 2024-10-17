@@ -14,7 +14,7 @@ import { VexScrollbarComponent } from '@vex/components/vex-scrollbar/vex-scrollb
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { IUser } from 'src/app/interfaces/IUser.interface';
 
 @Component({
@@ -30,7 +30,8 @@ import { IUser } from 'src/app/interfaces/IUser.interface';
     VexScrollbarComponent,
     NgFor,
     SidenavItemComponent,
-    AsyncPipe
+    AsyncPipe,
+    UpperCasePipe
   ]
 })
 export class SidenavComponent implements OnInit {

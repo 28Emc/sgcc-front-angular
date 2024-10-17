@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { VexBreadcrumbsComponent } from '@vex/components/vex-breadcrumbs/vex-breadcrumbs.component';
@@ -31,7 +31,7 @@ import { Order, tableSalesData } from 'src/app/utils/fake-data';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   tableColumns: TableColumn<Order>[] = [
     {
       label: '',
@@ -104,4 +104,10 @@ export class DashboardComponent {
     },
     colors: ['#ff9800']
   });
+
+  constructor() { }
+
+  ngOnInit(): void {
+
+  }
 }

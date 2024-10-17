@@ -14,7 +14,6 @@ import { provideNavigation } from './core/navigation/navigation.provider';
 import { vexConfigs } from '@vex/config/vex-configs';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { JwtInterceptorService } from './interceptors/jwt-interceptor.service';
-import { AuthInterceptorService } from './interceptors/auth-interceptor.service';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { SpanishPaginatorIntl } from './utils/spanishPaginatorIntl';
 
@@ -77,8 +76,7 @@ export const appConfig: ApplicationConfig = {
     provideIcons(),
     provideLuxon(),
     provideHttpClient(withInterceptors([
-      // JwtInterceptorService, // TODO: HABILITAR CUANDO SE IMPLEMENTE EL INICIO DE SESIÓN CON BACKEND
-      AuthInterceptorService
+      JwtInterceptorService
     ])),
     { provide: MatPaginatorIntl, useClass: SpanishPaginatorIntl },
     { provide: LocationStrategy, useClass: HashLocationStrategy }

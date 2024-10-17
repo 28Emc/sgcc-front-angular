@@ -85,12 +85,13 @@ export const tableSalesData: Order[] = [
 ];
 
 export const fakeUserLogin: IUser = {
-  "id": 1,
-  "alias": "Administrador",
-  "username": "Administrador",
-  "rol": "ADMIN",
-  "token": "ec80f5690620d23ab137502f24165195009d9466",
-  "refresh_token": "ec80f5690620d23ab137502f24165195009d9466"
+  id: 1,
+  alias: "Administrador",
+  username: "Administrador",
+  role: "ADMIN",
+  accessToken: "ec80f5690620d23ab137502f24165195009d9466",
+  refreshToken: "ec80f5690620d23ab137502f24165195009d9466",
+  createdAt: DateTime.now().setLocale('es-PE').toFormat('yyyy-MM-dd HH:mm:ss')
 }
 
 export const OPTIONS: NavigationItem[] = [
@@ -101,18 +102,45 @@ export const OPTIONS: NavigationItem[] = [
     icon: 'mat:dashboard',
     routerLinkActiveOptions: { exact: true }
   },
-  /* {
+  {
     type: 'subheading',
-    label: 'Empresas',
+    label: 'Mantenimiento',
     children: [
       {
         type: 'link',
-        label: 'Empresas',
-        route: '/empresas',
-        icon: 'mat:business',
+        label: 'Usuarios',
+        route: '/maintenance/users',
+        icon: 'mat:group',
+        routerLinkActiveOptions: { exact: true }
+      },
+      {
+        type: 'link',
+        label: 'Áreas',
+        route: '/maintenance/areas',
+        icon: 'mat:door_front',
+        routerLinkActiveOptions: { exact: true }
+      },
+      {
+        type: 'link',
+        label: 'Servicios',
+        route: '/maintenance/services',
+        icon: 'mat:emoji_objects',
         routerLinkActiveOptions: { exact: true }
       },
     ]
-  }, */
+  },
+  {
+    type: 'subheading',
+    label: 'Gestión',
+    children: [
+      {
+        type: 'link',
+        label: 'Consumos',
+        route: '/management/consumptions',
+        icon: 'mat:calculate',
+        routerLinkActiveOptions: { exact: true }
+      },
+    ]
+  }
   // TODO: AGREGAR MÁS OPCIONES DE SER NECESARIO
 ];

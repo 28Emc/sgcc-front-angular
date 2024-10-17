@@ -1,19 +1,28 @@
 export interface IUser {
   id: number;
   username: string;
+  password?: string;
   alias: string;
-  rol: string;
+  role: string;
+  createdAt: string;
   rol_id?: number;
   avatar?: string;
   state?: string;
 
-  token?: string;
-  refresh_token?: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface IUserLoginReq {
   username: string;
   password: string;
+}
+
+export interface IUserLoginRes {
+  user: IUser;
+  accessToken: string;
+  refreshToken: string;
+  options: any[];
 }
 
 export interface IUserLogoutReq {

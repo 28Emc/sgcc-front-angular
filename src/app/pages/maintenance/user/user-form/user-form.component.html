@@ -1,0 +1,69 @@
+<form (ngSubmit)="$event.preventDefault()" [formGroup]="form" autocomplete="off">
+  <div class="flex items-center" mat-dialog-title>
+    <h2 class="headline m-0 flex-auto">
+      {{ titulo }}
+    </h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+  </div>
+
+  <mat-divider class="text-border"></mat-divider>
+
+  <mat-dialog-content class="flex flex-col">
+    <div class="flex flex-col md:flex-row gap-2">
+      <mat-form-field class="flex-auto">
+        <mat-label>Rol</mat-label>
+        <input class="!uppercase" formControlName="role" matInput />
+      </mat-form-field>
+
+      <mat-form-field class="sm:basis-1/2 basis-full">
+        <mat-label>Alias (opcional)</mat-label>
+        <input formControlName="alias" matInput placeholder="Escribe un alias" />
+        <!-- <mat-icon matIconPrefix svgIcon="mat:business"></mat-icon> -->
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-2">
+      <mat-form-field class="sm:basis-1/2 basis-full">
+        <mat-label>Usuario</mat-label>
+        <input formControlName="username" matInput type="text" placeholder="Escribe un nombre de usuario" />
+        <!-- <mat-icon matIconPrefix svgIcon="mat:business"></mat-icon> -->
+      </mat-form-field>
+
+      <mat-form-field class="sm:basis-1/2 basis-full">
+        <mat-label>Contraseña</mat-label>
+        <input [type]="inputType" formControlName="password" placeholder="Escribe una contraseña" matInput required />
+        <button (click)="toggleVisibility()" mat-icon-button matIconSuffix [disabled]="loading"
+          [matTooltip]="visible ? 'Ocultar contraseña' : 'Ver contraseña'" type="button" aria-hidden="false">
+          <mat-icon class="hover:text-primary-600 transition"
+            [svgIcon]="!visible ? 'mat:visibility' : 'mat:visibility_off'"></mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    @if (data && data.user?.id) {
+    <div class="flex flex-col md:flex-row gap-2">
+      <mat-form-field class="md:basis-1/2 basis-full">
+        <mat-label>Fecha Registro</mat-label>
+        <input [matDatepicker]="datepickerFC" matInput placeholder="dd/MM/yyyy" formControlName="createdAt" />
+        <mat-datepicker-toggle [for]="datepickerFC" matIconSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datepickerFC></mat-datepicker>
+      </mat-form-field>
+      <!-- <mat-form-field class="md:basis-1/2 basis-full">
+        <mat-label>Estado</mat-label>
+        <input class="uppercase" formControlName="status" matInput />
+      </mat-form-field> -->
+    </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="flex sm:flex-row flex-col sm:items-center justify-between gap-2 w-full">
+      <vex-cancel-button mat-dialog-close btnText="Cancelar"></vex-cancel-button>
+      <vex-action-button (actionBtnClicked)="saveData()" [btnText]="isCreateMode() ? 'Registrar' : 'Guardar cambios'"
+        [btnDisabled]="loading || form.invalid" [btnLoading]="loading" btnColor="primary"></vex-action-button>
+    </div>
+  </mat-dialog-actions>
+</form>
