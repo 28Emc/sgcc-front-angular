@@ -7,3 +7,4 @@ export const BADGE_STYLES: Map<string, string[]> = new Map<string, string[]>([
   // ['yyy', ['bg-orange-400/20', 'text-orange-600']],
   // ['zzz', ['bg-purple-400/20', 'text-purple-600']],
 ]);
+export const MAX_WIDTH_MOBILE = `(max-width: 599px)`;

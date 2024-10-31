@@ -1,6 +1,6 @@
 <button mat-raised-button type="button" [color]="btnColor ?? 'primary'"
   class="disabled:!bg-gray-200 disabled:!text-gray-400 transition !rounded-md" [class]="btnClasses"
-  [disabled]="btnDisabled" (click)="onActionBtnClicked()" aria-hidden="false">
+  [disabled]="btnDisabled" (click)="onActionBtnClicked()">
   <span>{{btnText}}</span>
   @if (btnLoading) {
   <mat-icon class="icon-sm btn__icon animate-spin disabled:!text-gray-400" svgIcon="mat:autorenew"></mat-icon>

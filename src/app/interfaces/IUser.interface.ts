@@ -13,6 +13,8 @@ export interface IUser {
   refreshToken?: string;
 }
 
+export type CrudUser = IUser & { acciones: string };
+
 export interface IUserLoginReq {
   username: string;
   password: string;

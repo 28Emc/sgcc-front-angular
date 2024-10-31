@@ -60,6 +60,15 @@ html {
     display: none;
   }
 
+  [class*="mat-column-"] {
+    text-wrap: nowrap;
+  }
+
+  .full-screen-dialog .mat-dialog-container {
+    padding: 0;
+    margin: 0;
+  }
+
   /* TODO: CUSTOM DISABLED MAT-FORMFIELD OUTLINED STYLES, UNCOMMENT TO APPLY */
   body.light {
     .mdc-text-field--disabled {
@@ -95,6 +104,13 @@ html {
       .mat-mdc-select {
         color: #080707 !important;
       }
+    }
+
+    .mat-expansion-indicator,
+    .mat-expansion-indicator::before,
+    .mat-expansion-indicator::after {
+      color: #080707 !important;
+      border-color: #080707 !important;
     }
   }
 
@@ -133,5 +149,12 @@ html {
         color: #E2E3E5 !important;
       }
     }
+  }
+
+  .mat-expansion-indicator,
+  .mat-expansion-indicator::before,
+  .mat-expansion-indicator::after {
+    color: #E2E3E5 !important;
+    border-color: #E2E3E5 !important;
   }
 }

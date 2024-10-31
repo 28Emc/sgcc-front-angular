@@ -1,0 +1,137 @@
+<div class="card overflow-auto">
+  <div
+    class="bg-app-bar px-3 sm:px-6 sm:h-16 h-auto py-3 sm:py-2 border-b sticky left-0 flex items-center flex-col sm:flex-row gap-2 sm:gap-2">
+    @if (withSearchS()) {
+    <mat-form-field subscriptSizing="dynamic" class="bg-transparent max-w-full sm:max-w-[300px] w-full sm:w-auto">
+      <mat-icon matIconPrefix svgIcon="mat:search"></mat-icon>
+      <input matInput [formControl]="searchCtrl" placeholder="Buscar por..." autocomplete="off" type="text"
+        class="w-full bg-white" />
+    </mat-form-field>
+    }
+
+    <span class="flex-auto"></span>
+    <div class="flex flex-row gap-5">
+      @for (item of getFilteredCrudActionByPosition('HEADER'); track $index) {
+      <button (click)="item.action()" color="primary" mat-mini-fab [matTooltip]="item.label" type="button"
+        [disabled]="item.disabledCondition ? item.disabledCondition() : false"
+        [matTooltipDisabled]="item.disabledCondition ? item.disabledCondition() : false">
+        <mat-icon [svgIcon]="item.icon!"></mat-icon>
+      </button>
+      }
+    </div>
+  </div>
+
+  @if (loadingS()) {
+  <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+  }
+
+  <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort matTableResponsive>
+    <ng-container *ngFor="let column of columnsS(); trackBy: trackByProperty">
+      @switch (column.type) {
+      @case ('id') {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          {{ ['', null].includes(row[column.property]) ? '-' : row[column.property] }}
+        </td>
+      </ng-container>
+      }
+      @case ('text') {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          {{ ['', null].includes(row[column.property]) ? '-' : row[column.property] }}
+        </td>
+      </ng-container>
+      }
+      @case ('number') {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          {{ ['', null].includes(row[column.property]) ? '-' : row[column.property] | number }}
+        </td>
+      </ng-container>
+      }
+      @case ('date') {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          {{ ['', null].includes(row[column.property]) ? '-' : row[column.property] | date:
+          'dd/MM/yyyy'
+          }}
+        </td>
+      </ng-container>
+      }
+      @case ('datetime') {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          {{ ['', null].includes(row[column.property]) ? '-' : row[column.property] | date:
+          'dd/MM/yyyy HH:mm'
+          }}
+        </td>
+      </ng-container>
+      }
+      @case ('badge') {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          <div class="flex items-start gap-1">
+            <span [ngClass]="getBadgeStyles(row[column.property])"
+              class="rounded px-2 py-1 font-medium text-xs flex-none">
+              {{ row[column.property] | uppercase }}
+            </span>
+          </div>
+        </td>
+      </ng-container>
+      }
+      @case ('action') {
+      <ng-container [matColumnDef]="column.property" stickyEnd>
+        <th id *matHeaderCellDef mat-header-cell>{{ column.label }}</th>
+        <td *matCellDef="let row" mat-cell>
+          <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ element: row }"
+            [matMenuTriggerFor]="actionsMenu" mat-icon-button type="button">
+            <mat-icon svgIcon="mat:more_horiz"></mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      }
+      @default {
+      <ng-container [matColumnDef]="column.property">
+        <th id *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+        <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+          {{ ['', null].includes(row[column.property]) ? '-' : row[column.property] }}
+        </td>
+      </ng-container>
+      }
+      }
+    </ng-container>
+
+    <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: visibleColumns;" @fadeInUp
+      class="hover:bg-hover transition duration-400 ease-out-swift" mat-row>
+    </tr>
+  </table>
+
+  @if (dataSource.filteredData.length === 0) {
+  <div @fadeInUp class="p-5 w-full text-center">
+    <span class="font-medium text-secondary">{{ textTable }}</span>
+  </div>
+  }
+
+  <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"
+    showFirstLastButtons></mat-paginator>
+</div>
+
+<mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
+  <ng-template let-element="element" matMenuContent>
+    @for (item of getFilteredCrudActionByPosition('TABLE'); track $index) {
+    @if (item.showCondition) {
+    <button (click)="item.action(element)" mat-menu-item
+      [disabled]="item.disabledCondition ? item.disabledCondition(element) : false">
+      <span class="text-sm">{{ item.label }}</span>
+    </button>
+    }
+    }
+  </ng-template>
+</mat-menu>
