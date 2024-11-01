@@ -84,7 +84,7 @@ export class SecurityService {
     }
   }
 
-  signOut(logoutData: IUserLogoutReq): Observable<any> {
+  signOut(logoutData?: IUserLogoutReq): Observable<any> {
     this.clearSessionStorageData();
     this.accessTokenStr = '';
     this.refreshTokenStr = '';
@@ -100,6 +100,14 @@ export class SecurityService {
 
   storeUserData(userInfo: IUser): void {
     sessionStorage.setItem('user', JSON.stringify(userInfo));
+  }
+
+  getUserData() {
+    if (sessionStorage.getItem('user') && ('id' in JSON.parse(sessionStorage.getItem('user')!))) {
+      return JSON.parse(sessionStorage.getItem('user')!);
+    } else {
+      this.signOut();
+    }
   }
 
   storeTokenData(token: string, refreshToken?: string): void {

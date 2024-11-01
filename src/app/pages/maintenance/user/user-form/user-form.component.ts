@@ -1,6 +1,6 @@
-import { NgClass, NgIf } from '@angular/common';
-import { Component, inject, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgClass, NgIf, TitleCasePipe } from '@angular/common';
+import { Component, inject, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -15,9 +15,13 @@ import { IUser } from 'src/app/interfaces/IUser.interface';
 import { IService } from 'src/app/interfaces/IService.interface';
 import { IArea } from 'src/app/interfaces/IArea.interface';
 import { NotificationService } from 'src/app/services/notification.service';
-import { USER_ROLE } from 'src/app/utils/constants';
 import { DateTime } from 'luxon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SecurityService } from 'src/app/services/security.service';
+import { CustomDynamicFormService } from 'src/app/services/custom-dynamic-form.service';
+import { IFieldConfig } from 'src/app/interfaces/IFieldConfig.interface';
+import { ROLES, USER_ROLE } from 'src/app/utils/constants';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'vex-user-form',
@@ -36,30 +40,27 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatSlideToggleModule,
     MatDatepickerModule,
+    MatSelectModule,
     ActionButtonComponent,
-    CancelButtonComponent
+    CancelButtonComponent,
+    TitleCasePipe
   ],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss'
 })
-export class UserFormComponent {
-  form: FormGroup = this.fb.group({
-    id: [{ value: '', disabled: true }],
-    alias: [''],
-    username: ['', [Validators.required]],
-    password: ['', [Validators.required]],
-    role: [{ value: USER_ROLE, disabled: true }, [Validators.required]],
-    createdAt: [{ value: '', disabled: true }],
-    // state: [{ value: '', disabled: true }]
-  });
-  resetForm = this.form.getRawValue();
-  inputType: 'text' | 'password' = 'password';
+export class UserFormComponent implements OnInit, OnDestroy {
+  form: FormGroup;
+  initialFormValues: { [key: string]: any } = {};
+  formFields: IFieldConfig[] = [];
   mode: 'create' | 'update' = 'create';
   titulo: string = 'Nuevo usuario';
   loading: boolean = false;
   visible: boolean = false;
+  rolesData: any[] = ROLES;
 
   notificacionService = inject(NotificationService);
+  securityService = inject(SecurityService);
+  dynamicFormService = inject(CustomDynamicFormService);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -67,42 +68,45 @@ export class UserFormComponent {
       services: IService[],
       areas: IArea[]
     },
-    private readonly dialogRef: MatDialogRef<UserFormComponent>,
-    private readonly fb: FormBuilder
-  ) { }
+    private readonly dialogRef: MatDialogRef<UserFormComponent>
+  ) {
+    this.formFields = [
+      { name: 'id', value: '', disabled: true, hidden: true },
+      { name: 'role', value: USER_ROLE, disabled: true },
+      { name: 'alias', value: '', disabled: false },
+      { name: 'username', value: '', disabled: false, validators: [Validators.required] },
+      { name: 'password', value: '', disabled: false, validators: [Validators.required] },
+      { name: 'createdAt', value: '', disabled: true }
+    ];
+    this.form = this.dynamicFormService.createForm(this.formFields);
+    this.initialFormValues = this.form.getRawValue();
+  }
 
   ngOnInit() {
-    this.form.reset(this, this.resetForm);
-
-    if (this.data?.user) {
+    if (this.data.user) {
       this.mode = 'update';
       this.titulo = 'Actualizar datos de usuario';
-      this.form.removeControl('password');
-      this.form.patchValue({
-        id: this.data.user.id,
-        alias: this.data.user.alias,
-        username: this.data.user.username,
-        role: this.data.user.role,
-        createdAt: DateTime.fromFormat(this.data.user.createdAt, 'yyyy-MM-dd HH:mm:ss').toString(),
-        // state: this.data.user.status === true ? 'ACTIVO' : 'INACTIVO'
-      });
+      this.handleExistingUser();
     } else {
       this.data.user = {} as IUser;
       this.form.removeControl('id');
-      this.form.patchValue({
-        role: USER_ROLE
-      });
     }
   }
 
-  toggleVisibility(): void {
-    if (this.visible) {
-      this.inputType = 'password';
-      this.visible = false;
-    } else {
-      this.inputType = 'text';
-      this.visible = true;
-    }
+  ngOnDestroy(): void {
+    this.form.reset(this.initialFormValues);
+  }
+
+  handleExistingUser(): void {
+    this.form.get('password')?.clearValidators();
+    this.form.get('password')?.updateValueAndValidity();
+    this.form.patchValue({
+      id: this.data.user!.id,
+      alias: this.data.user!.alias,
+      username: this.data.user!.username,
+      role: this.data.user!.role,
+      createdAt: DateTime.fromFormat(this.data.user!.createdAt, 'yyyy-MM-dd HH:mm:ss').toString()
+    });
   }
 
   saveData(): void {
@@ -112,8 +116,9 @@ export class UserFormComponent {
       return;
     }
 
-    const userData = this.form.getRawValue();
-    this.dialogRef.close(userData);
+    const registeredData = this.form.getRawValue();
+    const { password, ...updatedData } = this.form.getRawValue();
+    this.dialogRef.close(this.isCreateMode() ? registeredData : updatedData);
   }
 
   isCreateMode(): boolean {

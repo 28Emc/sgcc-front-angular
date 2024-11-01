@@ -1,4 +1,16 @@
-export const USER_ROLE = 'user';
+export const ROLES = [
+  {
+    id: 1,
+    role: 'admin',
+    description: 'ADMINISTRADOR'
+  },
+  {
+    id: 2,
+    role: 'user',
+    description: 'USUARIO'
+  }
+];
+export const USER_ROLE = ROLES[1].role;
 export const DEFAULT_BADGE_CLASSES: string[] = ['bg-gray-600/10', 'text-gray-600'];
 export const BADGE_STYLES: Map<string, string[]> = new Map<string, string[]>([
   ['admin', ['bg-red-400/20', 'text-red-600']],
